@@ -1,0 +1,2500 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="Claude Code 四大觀念課程">
+<meta property="og:description" content="筆記系統、API 規範 Skill、流程斜線指令、外部連接與安全防線，含補充觀念、實作 LAB、圖解與測驗。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%AD%3C/text%3E%3C/svg%3E">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Claude Code 四大觀念課程</title>
+<meta name="description" content="國土三組 Claude Code 四堂課：筆記系統、API 規範 Skill、流程斜線指令、外部連接與安全防線">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Noto+Serif+TC:wght@600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<style>
+:root{
+  --ground:#F2F5F4; --surface:#FFFFFF; --sunken:#E8EEED; --ink:#15212B; --muted:#56666E;
+  --rule:#D3DCDB; --accent:#0E6B78; --accent-soft:#DCEEF0; --accent-ink:#FFFFFF;
+  --warn:#A94E17; --warn-soft:#F8E8DC; --ok:#2C7A4B; --ok-soft:#E0F1E6;
+  --bad:#B3362F; --bad-soft:#F7E1DF; --code-bg:#0F1B22; --code-ink:#DCE7EA; --code-dim:#7F97A1;
+  --contour:rgba(14,107,120,.13);
+  --sans:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;
+  --serif:"Noto Serif TC","PMingLiU","Songti TC",serif;
+  --mono:"JetBrains Mono",Consolas,"Courier New",monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D1316; --surface:#141C20; --sunken:#1A252A; --ink:#E1E9EB; --muted:#94A6AD;
+    --rule:#26353B; --accent:#5DB8C5; --accent-soft:#16333A; --accent-ink:#0D1316;
+    --warn:#E39060; --warn-soft:#35231A; --ok:#72C595; --ok-soft:#17301F;
+    --bad:#EE8078; --bad-soft:#3A1D1B; --code-bg:#091014; --code-ink:#D6E3E7; --code-dim:#6F8891;
+    --contour:rgba(93,184,197,.10);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1316; --surface:#141C20; --sunken:#1A252A; --ink:#E1E9EB; --muted:#94A6AD;
+  --rule:#26353B; --accent:#5DB8C5; --accent-soft:#16333A; --accent-ink:#0D1316;
+  --warn:#E39060; --warn-soft:#35231A; --ok:#72C595; --ok-soft:#17301F;
+  --bad:#EE8078; --bad-soft:#3A1D1B; --code-bg:#091014; --code-ink:#D6E3E7; --code-dim:#6F8891;
+  --contour:rgba(93,184,197,.10);
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.75;padding-inline:16px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+kbd{font-family:var(--mono);font-size:.82em;border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 .35em;background:var(--surface)}
+code{font-family:var(--mono);font-size:.86em;background:var(--sunken);padding:.1em .38em;border-radius:4px;word-break:break-word}
+.wrap{max-width:1180px;margin-inline:auto}
+
+/* ---------- masthead ---------- */
+.mast{position:relative;overflow:hidden;margin-top:20px;border:1px solid var(--rule);border-radius:14px;background:var(--surface);padding:28px 28px 24px}
+.mast::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-radial-gradient(ellipse 60% 48% at 92% 18%,transparent 0 17px,var(--contour) 17px 18px);
+  -webkit-mask-image:linear-gradient(90deg,transparent 30%,#000 75%);mask-image:linear-gradient(90deg,transparent 30%,#000 75%)}
+.mast > *{position:relative}
+.eyebrow{font-size:12.5px;letter-spacing:.14em;color:var(--muted);font-weight:500}
+.mast h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,4.4vw,42px);line-height:1.25;margin:6px 0 10px;text-wrap:balance}
+.mast p{margin:0;color:var(--muted);max-width:60ch}
+.datum{display:inline-grid;grid-template-columns:auto auto;gap:2px 14px;margin-top:18px;border:1px solid var(--rule);border-radius:8px;padding:10px 14px;font-size:13px;background:var(--ground)}
+.nw{white-space:nowrap}
+.datum dt{color:var(--muted)} .datum dd{margin:0;font-family:var(--mono);font-size:12.5px;font-variant-numeric:tabular-nums}
+
+/* ---------- layout ---------- */
+.layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:36px;margin-block:28px 60px;align-items:start}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px)}
+.toc ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.toc button{all:unset;box-sizing:border-box;display:grid;grid-template-columns:34px 1fr;align-items:center;width:100%;padding:9px 10px;border-radius:8px;cursor:pointer;color:var(--muted);font-size:14.5px;line-height:1.35}
+.toc button:hover{background:var(--sunken);color:var(--ink)}
+.toc button[aria-selected="true"]{background:var(--accent-soft);color:var(--ink);font-weight:700}
+.toc .no{font-family:var(--mono);font-size:12px;color:var(--accent)}
+.toc .prog{grid-column:2;font-size:11.5px;color:var(--muted);font-weight:400;font-variant-numeric:tabular-nums}
+.toc .prog.done{color:var(--ok)}
+.toc-foot{margin-top:18px;padding-top:14px;border-top:1px solid var(--rule);font-size:12.5px;color:var(--muted)}
+.toc-foot button.reset{all:unset;cursor:pointer;color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+
+main{min-width:0}
+section.page{max-width:780px}
+.page-head{margin-bottom:26px}
+.page-head .eyebrow{color:var(--accent)}
+.page-head h2{font-family:var(--serif);font-size:clamp(26px,3.6vw,34px);line-height:1.3;margin:4px 0 10px;text-wrap:balance}
+.page-head .lead{font-size:17px;color:var(--muted);margin:0}
+.remember{margin-top:16px;display:flex;gap:12px;align-items:baseline;padding:12px 16px;border-radius:10px;background:var(--accent-soft)}
+.remember b{flex:none;font-size:12.5px;letter-spacing:.1em;color:var(--accent)}
+
+h3{font-size:21px;margin:44px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--rule);text-wrap:balance}
+h4{font-size:16.5px;margin:26px 0 8px}
+p{margin:0 0 12px}
+ul.plain{margin:0 0 14px;padding-left:1.25em} ul.plain li{margin-bottom:4px}
+ol.steps{margin:0 0 14px;padding-left:1.4em} ol.steps li{margin-bottom:5px}
+
+.updates{border:1px solid var(--rule);border-radius:10px;padding:14px 18px;background:var(--surface);font-size:14.5px}
+.updates b{display:block;font-size:12.5px;letter-spacing:.1em;color:var(--muted);margin-bottom:4px}
+.updates ul{margin:0;padding-left:1.2em}
+
+.callout{border-radius:8px;padding:12px 16px;margin:14px 0 18px;font-size:15px;border:1px solid transparent}
+.callout.info{background:var(--accent-soft)}
+.callout.warn{background:var(--warn-soft);border-color:color-mix(in srgb,var(--warn) 30%,transparent)}
+.callout.ok{background:var(--ok-soft)}
+.callout .tag{font-weight:700;margin-right:6px}
+.callout.warn .tag{color:var(--warn)} .callout.ok .tag{color:var(--ok)} .callout.info .tag{color:var(--accent)}
+
+.tbl{overflow-x:auto;margin:10px 0 18px;border:1px solid var(--rule);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;line-height:1.6}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--rule)}
+th{font-size:12.5px;letter-spacing:.06em;color:var(--muted);font-weight:700;background:var(--sunken)}
+tr:last-child td{border-bottom:0}
+td.k{white-space:nowrap;font-weight:700}
+.tbl.wide table{min-width:660px}
+.x{color:var(--bad)} .y{color:var(--ok)}
+
+.code{position:relative;margin:10px 0 18px;border-radius:10px;background:var(--code-bg);color:var(--code-ink)}
+.code .cap{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-bottom:1px solid rgba(255,255,255,.08);font-family:var(--mono);font-size:12px;color:var(--code-dim)}
+.code button{all:unset;cursor:pointer;font-family:var(--sans);font-size:12px;color:var(--code-ink);padding:2px 8px;border-radius:5px;border:1px solid rgba(255,255,255,.18)}
+.code button:hover{background:rgba(255,255,255,.08)}
+.code pre{margin:0;padding:12px 14px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.65;tab-size:2}
+.code .c{color:var(--code-dim)}
+
+.twocol{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:12px 0 18px}
+.panel{border:1px solid var(--rule);border-radius:10px;padding:14px 16px;background:var(--surface)}
+.panel h5{margin:0 0 6px;font-size:13px;letter-spacing:.1em;color:var(--accent)}
+.panel.pro h5{color:var(--warn)}
+.panel ul{margin:0;padding-left:1.15em;font-size:15px}
+.panel li{margin-bottom:5px}
+
+/* ---------- quiz ---------- */
+.quiz{display:flex;flex-direction:column;gap:14px;margin:12px 0 10px}
+.q{border:1px solid var(--rule);border-radius:10px;background:var(--surface);padding:14px 16px}
+.q .qt{font-weight:700;margin-bottom:10px;display:flex;gap:10px}
+.q .qn{flex:none;font-family:var(--mono);font-size:12px;color:var(--accent);padding-top:4px}
+.opts{display:grid;gap:6px}
+.opts button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;gap:10px;padding:8px 12px;border:1px solid var(--rule);border-radius:8px;font-size:15px;line-height:1.55}
+.opts button:hover:not(:disabled){border-color:var(--accent);background:var(--accent-soft)}
+.opts button .l{flex:none;font-family:var(--mono);font-size:12.5px;color:var(--muted);padding-top:2px}
+.opts button.right{border-color:var(--ok);background:var(--ok-soft)}
+.opts button.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opts button:disabled{cursor:default}
+.explain{margin-top:10px;font-size:14.5px;padding:10px 12px;border-radius:8px;background:var(--sunken)}
+.explain b.r{color:var(--ok)} .explain b.w{color:var(--bad)}
+.score{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+details.qa{border:1px solid var(--rule);border-radius:10px;background:var(--surface);margin-bottom:10px}
+details.qa summary{cursor:pointer;list-style:none;padding:12px 16px;font-weight:700;display:flex;gap:10px}
+details.qa summary::-webkit-details-marker{display:none}
+details.qa summary::before{content:"＋";color:var(--accent);flex:none}
+details.qa[open] summary::before{content:"－"}
+details.qa .a{padding:0 16px 12px 42px;font-size:15px}
+details.qa .a ul{margin:4px 0 0;padding-left:1.15em}
+
+.refs{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:6px}
+.refs li{display:grid;grid-template-columns:minmax(0,1fr);font-size:14.5px;padding:8px 12px;border-left:3px solid var(--rule)}
+.refs li span{color:var(--muted);font-size:13px}
+
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:40px;padding-top:18px;border-top:1px solid var(--rule)}
+.pager button{all:unset;cursor:pointer;color:var(--accent);font-weight:700;font-size:15px}
+.pager button:hover{text-decoration:underline;text-underline-offset:3px}
+
+.map{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:14px 0 20px}
+.map button{all:unset;box-sizing:border-box;cursor:pointer;border:1px solid var(--rule);border-radius:10px;padding:14px 16px;background:var(--surface);display:flex;flex-direction:column;gap:4px}
+.map button:hover{border-color:var(--accent)}
+.map .no{font-family:var(--mono);font-size:12px;color:var(--accent)}
+.map strong{font-size:16.5px}
+.map span.d{font-size:14px;color:var(--muted);line-height:1.55}
+.map .kind{margin-top:6px;align-self:flex-start;font-size:12px;padding:1px 8px;border-radius:99px;background:var(--sunken);color:var(--muted)}
+.map .kind.hard{background:var(--warn-soft);color:var(--warn)}
+
+.spectrum{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--rule);border-radius:10px;overflow:hidden;margin:12px 0 6px;background:var(--surface)}
+.spectrum div{padding:12px;font-size:14px;border-right:1px solid var(--rule)}
+.spectrum div:last-child{border-right:0}
+.spectrum b{display:block;font-size:14.5px}
+.spectrum small{color:var(--muted)}
+.spectrum-axis{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-bottom:18px}
+
+
+/* ---------- diagrams ---------- */
+figure.dg{margin:16px 0 24px;border:1px solid var(--rule);border-radius:12px;background:var(--surface);padding:16px 16px 12px}
+.dg-scroll{overflow-x:auto}
+figure.dg svg{display:block;width:100%;height:auto}
+figure.dg figcaption{margin-top:10px;padding-top:10px;border-top:1px solid var(--rule);font-size:13.5px;line-height:1.65;color:var(--muted)}
+figure.dg figcaption b{color:var(--ink)}
+.dg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.2}
+.dg .bx-s{fill:var(--sunken);stroke:var(--rule);stroke-width:1}
+.dg .bx-a{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.2}
+.dg .bx-w{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.2}
+.dg .bx-ok{fill:var(--ok-soft);stroke:var(--ok);stroke-width:1.2}
+.dg .bx-bad{fill:var(--bad-soft);stroke:var(--bad);stroke-width:1.2}
+.dg .frame{fill:none;stroke:var(--muted);stroke-width:1}
+.dg .wall{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.5}
+.dg .track{fill:var(--sunken)}
+.dg .fill-a{fill:var(--accent)}
+.dg text{font-family:var(--sans);font-size:13px;fill:var(--ink)}
+.dg text.ts{font-size:11.5px;fill:var(--muted)}
+.dg text.mono{font-family:var(--mono);font-size:11.5px;fill:var(--muted)}
+.dg text.tink{fill:var(--ink)}
+.dg text.tb{font-weight:700}
+.dg text.ta{fill:var(--accent)}
+.dg text.tw{fill:var(--warn)}
+.dg text.tok{fill:var(--ok)}
+.dg text.tbad{fill:var(--bad)}
+.dg .ln{fill:none;stroke:var(--muted);stroke-width:1.5}
+.dg .ln-a{stroke:var(--accent)}
+.dg .ln-bad{stroke:var(--bad)}
+.dg .ln-ok{stroke:var(--ok)}
+.dg .ln-warn{stroke:var(--warn)}
+.dg .ah{fill:var(--muted)}
+.dg .ah-a{fill:var(--accent)}
+.dg .ah-bad{fill:var(--bad)}
+.dg .ah-ok{fill:var(--ok)}
+.dg .ah-warn{fill:var(--warn)}
+.dg .dot{fill:var(--accent)}
+.dg .dot-ok{fill:var(--ok)}
+.dg text.num{font-family:var(--mono);font-size:13px;font-weight:700;fill:var(--surface)}
+.sev{display:inline-block;font-size:12px;font-weight:700;padding:0 8px;border-radius:99px;white-space:nowrap}
+.sev.h{background:var(--bad-soft);color:var(--bad)} .sev.m{background:var(--warn-soft);color:var(--warn)} .sev.l{background:var(--sunken);color:var(--muted)}
+.lab-step{border:1px solid var(--rule);border-radius:12px;background:var(--surface);padding:4px 18px 10px;margin:18px 0}
+.lab-step h4{margin-top:14px}
+.lab-step .meta{font-size:13px;color:var(--muted);margin:-4px 0 8px}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:15px;margin:6px 0 12px}
+.kv dt{font-weight:700;color:var(--accent);white-space:nowrap}
+.kv dd{margin:0}
+.oops{border-left:4px solid var(--bad);background:var(--bad-soft);border-radius:6px;padding:10px 14px;margin:12px 0;font-size:15px}
+.oops b.t{color:var(--bad)}
+.dg .branch-main{stroke:var(--ink);stroke-width:3}
+.dg .branch-feat{fill:none;stroke:var(--accent);stroke-width:3}
+
+@media (max-width:900px){
+  .layout{grid-template-columns:minmax(0,1fr);gap:18px}
+  nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ground);margin-inline:-16px;padding:8px 16px;border-bottom:1px solid var(--rule)}
+  .toc ol{flex-direction:row;overflow-x:auto;gap:4px;scrollbar-width:none}
+  .toc button{grid-template-columns:auto;white-space:nowrap;padding:7px 12px;gap:0}
+  .toc .no,.toc .prog{display:none}
+  .toc-foot{display:none}
+  .spectrum{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .spectrum div:nth-child(2){border-right:0}
+  .spectrum div:nth-child(-n+2){border-bottom:1px solid var(--rule)}
+}
+@media (max-width:520px){
+  .mast{padding:22px 18px}
+  details.qa .a{padding-left:16px}
+  td.k{white-space:normal}
+}
+@media (prefers-reduced-motion:no-preference){
+  section.page{animation:rise .28s ease-out}
+  @keyframes rise{from{transform:translateY(6px)}to{transform:none}}
+}
+@media (max-width:520px){figure.dg{padding:12px 10px 10px}}
+@media print{nav.toc,.pager{display:none}.layout{display:block}section.page[hidden]{display:block!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header class="mast">
+  <div class="eyebrow">國土三組 · AI 工作流導入教材</div>
+  <h1>Claude Code 四大觀念</h1>
+  <p>用一個「員工資料管理系統」案例，學會讓 Claude Code 記得規則、照規範寫、照流程做，並在推送程式前守住安全防線。</p>
+  <dl class="datum">
+    <dt>查核基準</dt><dd><span class="nw">Claude Code v2.1.274</span> · <span class="nw">2026-09-17</span></dd>
+    <dt>對照來源</dt><dd><span class="nw">code.claude.com/docs</span> · <span class="nw">GitHub Docs</span></dd>
+  </dl>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="課程目錄">
+  <ol role="tablist">
+    <li role="presentation"><button role="tab" id="tab-home" aria-controls="home" data-tab="home" aria-selected="true"><span class="no">00</span>課程總覽</button></li>
+    <li role="presentation"><button role="tab" id="tab-l1" aria-controls="l1" data-tab="l1" aria-selected="false"><span class="no">01</span>建立筆記系統<span class="prog" data-prog="l1"></span></button></li>
+    <li role="presentation"><button role="tab" id="tab-l2" aria-controls="l2" data-tab="l2" aria-selected="false"><span class="no">02</span>API 規範 Skill<span class="prog" data-prog="l2"></span></button></li>
+    <li role="presentation"><button role="tab" id="tab-l3" aria-controls="l3" data-tab="l3" aria-selected="false"><span class="no">03</span>流程斜線指令<span class="prog" data-prog="l3"></span></button></li>
+    <li role="presentation"><button role="tab" id="tab-l4" aria-controls="l4" data-tab="l4" aria-selected="false"><span class="no">04</span>外部連接與防線<span class="prog" data-prog="l4"></span></button></li>
+    <li role="presentation"><button role="tab" id="tab-ext" aria-controls="ext" data-tab="ext" aria-selected="false"><span class="no">＋</span>補充觀念<span class="prog" data-prog="ext"></span></button></li>
+    <li role="presentation"><button role="tab" id="tab-lab" aria-controls="lab" data-tab="lab" aria-selected="false"><span class="no">05</span>實作 LAB</button></li>
+    <li role="presentation"><button role="tab" id="tab-err" aria-controls="err" data-tab="err" aria-selected="false"><span class="no">!</span>錯了會怎樣</button></li>
+    <li role="presentation"><button role="tab" id="tab-sum" aria-controls="sum" data-tab="sum" aria-selected="false"><span class="no">★</span>總結：學到什麼</button></li>
+  </ol>
+  <div class="toc-foot">
+    <div>測驗總分 <b id="total-score">0 / 0</b></div>
+    <button type="button" class="reset" id="reset-quiz">清除作答紀錄</button>
+  </div>
+</nav>
+
+<main>
+<!-- ================= 總覽 ================= -->
+<section class="page" id="home" role="tabpanel" aria-labelledby="tab-home">
+  <div class="page-head">
+    <div class="eyebrow">課程總覽</div>
+    <h2>讓 AI 開發「可預期」的四層設計</h2>
+    <p class="lead">Claude Code 很聰明，但它不會自己知道團隊的規則。這四堂課依序解決「會忘記」「做法不一致」「步驟會跳」「推送沒人把關」四個問題，最後用 LAB 親手驗證。</p>
+  </div>
+
+  <div class="map">
+    <button type="button" data-go="l1"><span class="no">第 1 堂</span><strong>建立筆記系統</strong><span class="d">把規則與進度寫進檔案，壓縮後也不遺失。</span><span class="kind">指示（上下文）</span></button>
+    <button type="button" data-go="l2"><span class="no">第 2 堂</span><strong>API 規範 Skill</strong><span class="d">把團隊做法包成 Skill，寫 API 時自動套用。</span><span class="kind">指示（上下文）</span></button>
+    <button type="button" data-go="l3"><span class="no">第 3 堂</span><strong>流程斜線指令</strong><span class="d">固定步驟做成 /add-api，由人手動觸發。</span><span class="kind">指示（上下文）</span></button>
+    <button type="button" data-go="l4"><span class="no">第 4 堂</span><strong>外部連接與防線</strong><span class="d">連接 GitHub，用 permissions 與 Hooks 擋下危險操作。</span><span class="kind hard">強制（程式判斷）</span></button>
+    <button type="button" data-go="ext"><span class="no">補充</span><strong>補充觀念</strong><span class="d">權限模式、先規劃、回溯、自我驗證、安全、無人值守。</span><span class="kind">日常操作</span></button>
+    <button type="button" data-go="lab"><span class="no">第 5 堂</span><strong>實作 LAB</strong><span class="d">用自己的 Claude Code 一關一關做，並故意做錯看影響。</span><span class="kind hard">動手做</span></button>
+  </div>
+
+  <h3>先建立一個關鍵觀念：指示 vs 強制</h3>
+  <p>前三堂建立的東西都會被放進 Claude 的上下文，Claude 會盡量遵守，但官方明確說明<strong>不保證 100% 遵守</strong>。一定要做到的事，要交給程式判斷的機制。</p>
+  <div class="spectrum" role="list">
+    <div role="listitem"><b>CLAUDE.md／rules</b><small>每次載入的規則</small></div>
+    <div role="listitem"><b>Skill／斜線指令</b><small>需要時載入的做法與流程</small></div>
+    <div role="listitem"><b>permissions</b><small>deny → ask → allow</small></div>
+    <div role="listitem"><b>Hooks／CI</b><small>程式檢查，exit 2 阻擋</small></div>
+  </div>
+  <div class="spectrum-axis"><span>← 彈性高，靠模型判斷</span><span>確定性高，靠程式執行 →</span></div>
+<figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 880 336" role="img" aria-label="需求先進入 Claude 的上下文，決定呼叫工具後，再依序經過 Hook、permissions、GitHub 分支保護才會進入 main" style="min-width:640px"><defs><marker id="f1-mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-n" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f1-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-a" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f1-mbad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-bad" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f1-mok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-ok" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f1-mwarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-warn" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="bx" x="20" y="60" width="118" height="52" rx="8"/>
+<text class="t tb" x="79.0" y="81.5" text-anchor="middle">你的需求</text>
+<text class="ts" x="79.0" y="99.5" text-anchor="middle">「新增 POST API」</text>
+<rect class="bx-a" x="172" y="26" width="432" height="120" rx="10"/>
+<text class="t tb ta" x="188" y="48" text-anchor="start">Claude 的上下文</text>
+<rect class="bx" x="188" y="62" width="128" height="32" rx="8"/>
+<text class="ts tink" x="252.0" y="82.5" text-anchor="middle">CLAUDE.md／rules</text>
+<rect class="bx" x="326" y="62" width="118" height="32" rx="8"/>
+<text class="ts tink" x="385.0" y="82.5" text-anchor="middle">auto memory</text>
+<rect class="bx" x="454" y="62" width="136" height="32" rx="8"/>
+<text class="ts tink" x="522.0" y="82.5" text-anchor="middle">Skill（需要時載入）</text>
+<text class="ts ta" x="188" y="124" text-anchor="start">第 1–3 堂：指示，影響 Claude 怎麼決定</text>
+<rect class="bx" x="640" y="60" width="220" height="52" rx="8"/>
+<text class="t tb" x="750.0" y="81.5" text-anchor="middle">Claude 決定呼叫工具</text>
+<text class="mono" x="750.0" y="99.5" text-anchor="middle">Bash: git push …</text>
+<polyline class="ln" points="138,86 170,86" marker-end="url(#f1-mn)"/>
+<polyline class="ln" points="604,86 638,86" marker-end="url(#f1-mn)"/>
+<polyline class="ln" points="750,112 750,168 105,168 105,212" marker-end="url(#f1-mn)"/>
+<text class="ts" x="428" y="160" text-anchor="middle">每一次工具呼叫都先經過下面的關卡</text>
+<text class="ts tw" x="118" y="200" text-anchor="start">第 4 堂：強制，程式判斷</text>
+<rect class="bx-w" x="20" y="214" width="170" height="56" rx="8"/>
+<text class="t tb" x="105.0" y="237.5" text-anchor="middle">PreToolUse Hook</text>
+<text class="ts" x="105.0" y="255.5" text-anchor="middle">你寫的檢查程式</text>
+<rect class="bx-w" x="230" y="214" width="190" height="56" rx="8"/>
+<text class="t tb" x="325.0" y="237.5" text-anchor="middle">permissions</text>
+<text class="mono" x="325.0" y="255.5" text-anchor="middle">deny → ask → allow</text>
+<rect class="bx" x="460" y="214" width="110" height="56" rx="8"/>
+<text class="t tb" x="515.0" y="237.5" text-anchor="middle">執行指令</text>
+<text class="mono" x="515.0" y="255.5" text-anchor="middle">git push</text>
+<rect class="bx-w" x="610" y="214" width="160" height="56" rx="8"/>
+<text class="t tb" x="690.0" y="237.5" text-anchor="middle">GitHub 分支保護</text>
+<text class="ts" x="690.0" y="255.5" text-anchor="middle">PR＋CI＋審查</text>
+<rect class="bx-ok" x="806" y="214" width="62" height="56" rx="8"/>
+<text class="t tb" x="837.0" y="246.5" text-anchor="middle">main</text>
+<polyline class="ln" points="190,242 228,242" marker-end="url(#f1-mn)"/>
+<text class="ts" x="209" y="236" text-anchor="middle">通過</text>
+<polyline class="ln" points="420,242 458,242" marker-end="url(#f1-mn)"/>
+<text class="ts" x="439" y="236" text-anchor="middle">allow</text>
+<polyline class="ln" points="570,242 608,242" marker-end="url(#f1-mn)"/>
+<polyline class="ln" points="770,242 804,242" marker-end="url(#f1-mn)"/>
+<text class="ts" x="787" y="236" text-anchor="middle">合併</text>
+<polyline class="ln ln-bad" points="105,270 105,298" marker-end="url(#f1-mbad)"/>
+<text class="ts tbad" x="105" y="316" text-anchor="middle">exit 2 → 阻擋</text>
+<polyline class="ln ln-bad" points="325,270 325,298" marker-end="url(#f1-mbad)"/>
+<text class="ts tbad" x="325" y="316" text-anchor="middle">deny 阻擋／ask 詢問你</text>
+<polyline class="ln ln-bad" points="690,270 690,298" marker-end="url(#f1-mbad)"/>
+<text class="ts tbad" x="690" y="316" text-anchor="middle">條件未滿足 → 不能合併</text>
+</svg></div><figcaption><b>觀念圖｜一次工具呼叫會經過哪些關卡。</b>上半部（第 1–3 堂）影響 Claude「怎麼決定」；下半部（第 4 堂）是程式判斷，Claude 無法略過。</figcaption></figure>
+
+  <h3>這份教材和舊版差在哪</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>主題</th><th>舊版寫法</th><th>現在正確的觀念</th></tr></thead>
+    <tbody>
+      <tr><td class="k">上下文滿了</td><td class="x">自動刪除最舊對話（FIFO）</td><td>自動壓縮成結構化摘要</td></tr>
+      <tr><td class="k">視窗大小</td><td class="x">最多 200K</td><td>標準 200K；部分模型支援 1M</td></tr>
+      <tr><td class="k">筆記檔</td><td class="x">Claude 會主動查 progress.md</td><td>要從 CLAUDE.md 用 <code>@progress.md</code> 匯入</td></tr>
+      <tr><td class="k">自動記憶</td><td class="x">未提</td><td>Auto memory：Claude 自己寫在本機的 MEMORY.md</td></tr>
+      <tr><td class="k">斜線指令</td><td class="x">和 Skill 是兩套東西</td><td>已併入 Skills；舊 commands 資料夾仍可用</td></tr>
+      <tr><td class="k">allowed-tools</td><td class="x">限制可用工具</td><td>該回合「免詢問」的預先授權</td></tr>
+      <tr><td class="k">Hook 阻擋</td><td class="x">exit 1</td><td>exit 2（exit 1 不會擋）</td></tr>
+      <tr><td class="k">推送流程</td><td class="x"><code>git add .</code> 後直推 main</td><td>分支 → PR → 人工審查；deny 規則＋Hook＋分支保護</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>怎麼使用這份教材</h3>
+  <ol class="steps">
+    <li>每堂附<strong>流程圖、觀念圖</strong>，先看圖掌握機制，再讀文字與範例；手機上圖表可左右滑動。</li>
+    <li>依序讀完第 1～4 堂，每堂最後有<strong>自我測驗</strong>（點選即時看解說）與<strong>情境問答</strong>。</li>
+    <li>左側（手機在上方）會顯示每堂的答對進度，作答紀錄只存在你自己的瀏覽器。</li>
+    <li>讀完四堂後看「補充觀念」，再用<strong>第 5 堂 LAB</strong> 親手操作；「錯了會怎樣」整理常見錯誤的影響與修正。</li>
+    <li>最後看「總結」：同一件事分成<strong>白話版</strong>與<strong>專業版</strong>兩種說法，方便對內分享或對主管報告。</li>
+    <li>重要觀念旁附官方文件連結；Claude Code 更新很快，實作前請以連結內容為準。</li>
+  </ol>
+  <div class="pager"><span></span><button type="button" data-go="l1">開始第 1 堂 →</button></div>
+</section>
+
+<!-- ================= 第 1 堂 ================= -->
+<section class="page" id="l1" role="tabpanel" aria-labelledby="tab-l1" hidden>
+  <div class="page-head">
+    <div class="eyebrow">第 1 堂</div>
+    <h2>建立筆記系統</h2>
+    <p class="lead">解決長時間任務中「Claude 忘記早上交代的規則」。</p>
+    <div class="remember"><b>一句話記住</b><span>規則只講在對話裡會被壓縮掉；寫進檔案，每次都會重新載入。</span></div>
+  </div>
+
+  <h3>背景知識</h3>
+  <h4>Token 與上下文視窗</h4>
+  <p>Token 是模型計算文字量的單位，實際數量依模型而定，不必背換算公式，用 <code>/context</code> 直接看用量即可。上下文視窗是 Claude 在一次對話中「同時看得到」的全部內容：系統提示、CLAUDE.md、讀過的檔案、工具輸出與對話。</p>
+  <div class="tbl"><table>
+    <tbody>
+      <tr><td class="k">視窗大小</td><td>標準 200K Token；Opus 4.6 以後、Sonnet 4.6、Sonnet 5 等支援 1M（依方案）</td></tr>
+      <tr><td class="k">每次新對話</td><td>都是全新視窗，上一次的內容不會自動帶過來</td></tr>
+      <tr><td class="k">最佔空間</td><td>讀檔與工具輸出（安裝日誌、測試輸出）</td></tr>
+      <tr><td class="k">查看用量</td><td><code>/context</code></td></tr>
+    </tbody>
+  </table></div>
+  <p><a href="https://code.claude.com/docs/en/context-window" target="_blank" rel="noopener">官方文件：Explore the context window ↗</a></p>
+
+  <h4>自動壓縮（Auto-compact）</h4>
+  <p>對話接近上限時，Claude Code 會把整段對話整理成<strong>結構化摘要</strong>取代逐字記錄，讓工作繼續。摘要保留需求、決策、改過的檔案、錯誤與待辦；<strong>完整工具輸出與中間推理會消失</strong>。</p>
+  <div class="tbl"><table>
+    <thead><tr><th>內容</th><th>壓縮後</th></tr></thead>
+    <tbody>
+      <tr><td>專案根目錄 CLAUDE.md、沒有 paths 的 rules</td><td class="y">從磁碟重新注入</td></tr>
+      <tr><td>Auto memory（MEMORY.md）、Plan mode 的計畫</td><td class="y">從磁碟重新注入</td></tr>
+      <tr><td>有 paths 的 rules、子目錄 CLAUDE.md</td><td>再讀到相符檔案時重新載入</td></tr>
+      <tr><td>最近修改的檔案</td><td>重讀最多 5 個</td></tr>
+      <tr><td>已呼叫的 Skill 內容</td><td>重新注入（每個上限 5,000 Token）</td></tr>
+      <tr><td><strong>只在對話中講過的規則</strong></td><td class="x"><strong>只剩摘要，可能遺失</strong></td></tr>
+    </tbody>
+  </table></div>
+  <figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 860 350" role="img" aria-label="壓縮後，CLAUDE.md、rules 與 auto memory 會從磁碟重新注入，但只在對話中交代的規則只剩摘要" style="min-width:640px"><defs><marker id="f2-mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-n" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f2-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-a" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f2-mbad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-bad" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f2-mok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-ok" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f2-mwarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-warn" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="t tb" x="190" y="26" text-anchor="middle">壓縮前（接近上限）</text>
+<text class="t tb" x="670" y="26" text-anchor="middle">壓縮後</text>
+<rect class="frame" x="30" y="38" width="320" height="296" rx="10" stroke-dasharray="5 4"/>
+<rect class="frame" x="510" y="38" width="320" height="296" rx="10" stroke-dasharray="5 4"/>
+<rect class="bx-s" x="46" y="48" width="308" height="28" rx="5"/>
+<text class="ts tink" x="200.0" y="66.5" text-anchor="middle">系統提示</text>
+<rect class="bx-a" x="46" y="80" width="308" height="28" rx="5"/>
+<text class="ts tink" x="200.0" y="98.5" text-anchor="middle">CLAUDE.md＋rules</text>
+<rect class="bx-a" x="46" y="112" width="308" height="28" rx="5"/>
+<text class="ts tink" x="200.0" y="130.5" text-anchor="middle">auto memory</text>
+<rect class="bx-w" x="46" y="144" width="308" height="34" rx="5"/>
+<text class="ts tink" x="200.0" y="165.5" text-anchor="middle">08:00 對話：「要用 Repository Pattern」</text>
+<rect class="bx-s" x="46" y="182" width="308" height="96" rx="5"/>
+<text class="t" x="200.0" y="225.5" text-anchor="middle">讀檔與工具輸出</text>
+<text class="ts" x="200.0" y="243.5" text-anchor="middle">安裝日誌、測試輸出、檔案內容…</text>
+<rect class="bx" x="46" y="282" width="308" height="44" rx="5"/>
+<text class="ts tink" x="200.0" y="308.5" text-anchor="middle">GET／POST 實作對話</text>
+<polyline class="ln ln-a" points="360,214 500,214" marker-end="url(#f2-ma)"/>
+<text class="t tb ta" x="430" y="206" text-anchor="middle">自動壓縮</text>
+<text class="mono" x="430" y="232" text-anchor="middle">auto-compact</text>
+<rect class="bx-s" x="378" y="58" width="106" height="50" rx="8"/>
+<text class="ts tink" x="431.0" y="78.5" text-anchor="middle">磁碟上的檔案</text>
+<text class="ts" x="431.0" y="96.5" text-anchor="middle">CLAUDE.md 等</text>
+<polyline class="ln ln-a" points="484,76 522,94" marker-end="url(#f2-ma)"/>
+<polyline class="ln ln-a" points="484,94 522,126" marker-end="url(#f2-ma)"/>
+<text class="ts ta" x="431" y="126" text-anchor="middle">重新讀取</text>
+<rect class="bx-s" x="526" y="48" width="298" height="28" rx="5"/>
+<text class="ts tink" x="675.0" y="66.5" text-anchor="middle">系統提示</text>
+<rect class="bx-a" x="526" y="80" width="298" height="28" rx="5"/>
+<text class="ts tink" x="675.0" y="98.5" text-anchor="middle">CLAUDE.md＋rules　↻ 重新注入</text>
+<rect class="bx-a" x="526" y="112" width="298" height="28" rx="5"/>
+<text class="ts tink" x="675.0" y="130.5" text-anchor="middle">auto memory　↻ 重新注入</text>
+<rect class="bx" x="526" y="144" width="298" height="56" rx="5"/>
+<text class="t" x="675.0" y="167.5" text-anchor="middle">結構化摘要</text>
+<text class="ts" x="675.0" y="185.5" text-anchor="middle">需求、決策、改過的檔案、待辦</text>
+<rect class="bx-bad" x="526" y="204" width="298" height="34" rx="5" stroke-dasharray="5 4"/>
+<text class="ts tbad" x="675.0" y="225.5" text-anchor="middle">✗ 08:00 口頭規則：可能只剩一句或消失</text>
+<rect class="bx" x="526" y="242" width="298" height="28" rx="5"/>
+<text class="ts tink" x="675.0" y="260.5" text-anchor="middle">最近修改的檔案（最多 5 個）</text>
+<text class="ts" x="675" y="304" text-anchor="middle">空出的空間，可以繼續工作</text>
+</svg></div><figcaption><b>觀念圖｜自動壓縮前後，上下文裡留下什麼。</b>寫在檔案裡的規則會從磁碟重新讀回；早上在對話裡口頭交代的規則，只能靠摘要，可能消失。</figcaption></figure>
+<div class="callout warn"><span class="tag">重點</span>遺忘的主因不是「舊對話被刪掉」，而是「規則只存在對話裡」。</div>
+  <ul class="plain">
+    <li><code>/compact 聚焦在 Repository 規則</code>：壓縮時指定要保留的重點</li>
+    <li><code>/autocompact</code>：調整自動壓縮的觸發門檻</li>
+    <li><code>/clear</code>：換到不相關的工作時清空對話</li>
+  </ul>
+
+  <h4>Context Rot（上下文衰退）</h4>
+  <p>輸入越長，模型運用其中資訊的穩定度越差。Chroma 在 2025 年 7 月的技術報告測試 18 個模型，發現表現會隨輸入變長而<strong>非均勻下降</strong>，干擾資訊越多越明顯。所以就算換成 1M 視窗，<strong>只放當下需要的資訊</strong>仍是最穩的做法。</p>
+  <p><a href="https://www.trychroma.com/research/context-rot" target="_blank" rel="noopener">Chroma：Context Rot 研究報告 ↗</a>　·　<a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Anthropic：Effective context engineering ↗</a></p>
+
+  <h4>Repository Pattern（三層架構）</h4>
+  <div class="tbl"><table>
+    <thead><tr><th>層級</th><th>職責</th></tr></thead>
+    <tbody>
+      <tr><td class="k">Controller</td><td>接收 HTTP 請求、呼叫 Service、回傳狀態碼與回應格式</td></tr>
+      <tr><td class="k">Service</td><td>業務邏輯：輸入驗證、唯一性檢查、流程判斷</td></tr>
+      <tr><td class="k">Repository</td><td>唯一和資料庫溝通的地方，只做 CRUD</td></tr>
+    </tbody>
+  </table></div>
+  <div class="code"><div class="cap"><span>repositories/employeeRepository.js</span><button type="button" data-copy>複製</button></div><pre>async function findById(id) {
+  const { rows } = await db.query('SELECT * FROM employees WHERE id = $1', [id]);
+  return rows[0] ?? null;
+}</pre></div>
+
+  <h3>問題：長時間任務中的遺忘</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>時間（示意）</th><th>發生的事</th></tr></thead>
+    <tbody>
+      <tr><td class="k">08:00</td><td>在對話中說「要遵循 Repository Pattern」</td></tr>
+      <tr><td class="k">10:00</td><td>GET API 完成，有照規則</td></tr>
+      <tr><td class="k">13:00</td><td>大量讀檔與測試輸出，對話接近上限，<strong>自動壓縮</strong></td></tr>
+      <tr><td class="k">14:00</td><td class="x">DELETE API 把查詢直接寫在 Controller，和前面不一致</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>解法：四層筆記系統</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>檔案</th><th>誰寫</th><th>何時載入</th><th>放什麼</th></tr></thead>
+    <tbody>
+      <tr><td class="k"><code>CLAUDE.md</code></td><td>團隊</td><td>每次對話；壓縮後重新注入</td><td>指令、架構原則、命名規則</td></tr>
+      <tr><td class="k"><code>.claude/rules/</code></td><td>團隊</td><td>無 paths：每次；有 paths：讀到相符檔案時</td><td>只和特定目錄有關的規則</td></tr>
+      <tr><td class="k"><code>progress.md</code></td><td>團隊＋Claude</td><td>在 CLAUDE.md 用 <code>@</code> 匯入後每次載入</td><td>進度、下一步、待確認</td></tr>
+      <tr><td class="k">Auto memory</td><td>Claude</td><td>每次載入 MEMORY.md 前 200 行或 25KB</td><td>Claude 從糾正中學到的事</td></tr>
+    </tbody>
+  </table></div>
+  <figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 860 208" role="img" aria-label="三個時間點會載入不同的記憶檔：對話開始、讀到特定檔案時、壓縮後" style="min-width:640px"><defs><marker id="f3-mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-n" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f3-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-a" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f3-mbad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-bad" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f3-mok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-ok" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f3-mwarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-warn" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<polyline class="ln" points="30,70 830,70" marker-end="url(#f3-mn)"/>
+<circle class="dot" cx="150" cy="70" r="6"/>
+<text class="t tb" x="150" y="46" text-anchor="middle">對話開始</text>
+<rect class="bx-a" x="22" y="92" width="256" height="28" rx="5"/>
+<text class="ts tink" x="150.0" y="110.5" text-anchor="middle">CLAUDE.md（含 @progress.md）</text>
+<rect class="bx-a" x="22" y="128" width="256" height="28" rx="5"/>
+<text class="ts tink" x="150.0" y="146.5" text-anchor="middle">沒有 paths 的 rules</text>
+<rect class="bx-a" x="22" y="164" width="256" height="28" rx="5"/>
+<text class="ts tink" x="150.0" y="182.5" text-anchor="middle">MEMORY.md 前 200 行／25KB</text>
+<circle class="dot" cx="430" cy="70" r="6"/>
+<text class="t tb" x="430" y="46" text-anchor="middle">工作中（依需要）</text>
+<rect class="bx" x="302" y="92" width="256" height="28" rx="5"/>
+<text class="ts tink" x="430.0" y="110.5" text-anchor="middle">讀到 src/ 檔案 → 有 paths 的 rules</text>
+<rect class="bx" x="302" y="128" width="256" height="28" rx="5"/>
+<text class="ts tink" x="430.0" y="146.5" text-anchor="middle">進入子目錄 → 該目錄 CLAUDE.md</text>
+<rect class="bx" x="302" y="164" width="256" height="28" rx="5"/>
+<text class="ts tink" x="430.0" y="182.5" text-anchor="middle">被呼叫的 Skill 全文</text>
+<circle class="dot" cx="710" cy="70" r="6"/>
+<text class="t tb" x="710" y="46" text-anchor="middle">壓縮後（/compact）</text>
+<rect class="bx-a" x="582" y="92" width="256" height="28" rx="5"/>
+<text class="ts tink" x="710.0" y="110.5" text-anchor="middle">根目錄 CLAUDE.md、rules 重新注入</text>
+<rect class="bx-a" x="582" y="128" width="256" height="28" rx="5"/>
+<text class="ts tink" x="710.0" y="146.5" text-anchor="middle">auto memory 重新注入</text>
+<rect class="bx-a" x="582" y="164" width="256" height="28" rx="5"/>
+<text class="ts tink" x="710.0" y="182.5" text-anchor="middle">最近修改的檔案重讀（最多 5 個）</text>
+</svg></div><figcaption><b>流程圖｜各種記憶檔「什麼時候」進入上下文。</b>常駐的放 CLAUDE.md，只和某些目錄有關的放有 paths 的 rules，壓縮後由 Claude Code 自動補回。</figcaption></figure>
+<div class="callout info"><span class="tag">注意</span>CLAUDE.md 是「上下文」不是強制設定。一定要擋下的動作，請用第 4 堂的 permissions 或 Hooks。　<a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">官方文件：How Claude remembers your project ↗</a></div>
+
+  <h3>實作步驟</h3>
+  <h4>步驟 1：用 /init 產生初版 CLAUDE.md</h4>
+  <p>在專案根目錄啟動 Claude Code 後輸入 <code>/init</code>，Claude 會分析專案寫出建置、測試指令與慣例，再由你補上看程式看不出來的規則。</p>
+
+  <h4>步驟 2：整理 CLAUDE.md（建議 200 行內）</h4>
+  <div class="code"><div class="cap"><span>CLAUDE.md</span><button type="button" data-copy>複製</button></div><pre># 員工資料管理系統
+
+## 指令
+- 安裝：npm install
+- 測試：npm test
+
+## 架構原則
+- 採三層架構：Controller → Service → Repository
+- 資料庫查詢只能寫在 src/repositories/
+- 輸入驗證寫在 src/services/，Controller 不做驗證
+- API 回應格式依 api-standards skill
+
+## 工作方式
+- 每完成一個項目，更新 progress.md
+- 不確定的需求寫進 progress.md 的「待確認」，不要自行假設
+
+## 目前進度
+@progress.md</pre></div>
+  <p>最後一行 <code>@progress.md</code> 是匯入語法，內容會在每次對話開始時一起載入（最多巢狀 4 層）。只想提到檔名而不匯入時，用反引號包起來。</p>
+
+  <h4>步驟 3：特定目錄的規則放 .claude/rules/</h4>
+  <div class="code"><div class="cap"><span>.claude/rules/repository-pattern.md</span><button type="button" data-copy>複製</button></div><pre>---
+paths:
+  - "src/**/*.js"
+---
+
+# Repository Pattern 規則
+- 所有 SQL 只能出現在 src/repositories/
+- Service 與 Controller 不可直接 import db 模組
+- 查詢一律使用參數化（$1, $2），不可字串串接</pre></div>
+
+  <h4>步驟 4：progress.md 只放進度</h4>
+  <div class="code"><div class="cap"><span>progress.md</span><button type="button" data-copy>複製</button></div><pre># 開發進度
+
+## 已完成
+- [x] employees 資料表 migration
+- [x] GET /api/employees（三層＋測試）
+
+## 進行中
+- [ ] POST /api/employees
+  - [x] EmployeeRepository.create()
+  - [ ] EmployeeService.hireEmployee()  ← 目前在這裡
+
+## 待確認
+- 薪資欄位是否納入 API 回應？（涉及個資，先不納入）</pre></div>
+
+  <h4>步驟 5：確認有載入、認識 Auto memory</h4>
+  <ul class="plain">
+    <li><code>/context</code>：在 Memory files 清單確認 CLAUDE.md（含匯入的 progress.md）有出現</li>
+    <li><code>/memory</code>：查看、編輯所有記憶檔，開關 auto memory</li>
+    <li>Auto memory 存在 <code>~/.claude/projects/&lt;專案&gt;/memory/</code>，只在你的電腦上，<strong>不會進 git</strong>。團隊規則一定要寫進 CLAUDE.md。</li>
+    <li>大量讀檔的調查交給 <strong>Subagent</strong>：它在獨立上下文工作，只把摘要回傳主對話。<a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">官方文件：Subagents ↗</a></li>
+  </ul>
+
+<figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 860 226" role="img" aria-label="子代理在自己的上下文讀檔，只把摘要回傳主對話" style="min-width:640px"><defs><marker id="f4-mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-n" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f4-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-a" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f4-mbad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-bad" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f4-mok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-ok" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f4-mwarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-warn" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="bx-a" x="30" y="30" width="260" height="170" rx="10"/>
+<text class="t tb ta" x="46" y="54" text-anchor="start">主對話上下文</text>
+<rect class="bx" x="46" y="68" width="228" height="28" rx="5"/>
+<text class="ts tink" x="160.0" y="86.5" text-anchor="middle">你的需求</text>
+<rect class="bx" x="46" y="102" width="228" height="28" rx="5"/>
+<text class="ts tink" x="160.0" y="120.5" text-anchor="middle">CLAUDE.md</text>
+<rect class="bx-ok" x="46" y="150" width="228" height="32" rx="5"/>
+<text class="ts tink" x="160.0" y="170.5" text-anchor="middle">子代理摘要（約 420 tokens）</text>
+<polyline class="ln" points="290,82 448,82" marker-end="url(#f4-mn)"/>
+<text class="ts" x="369" y="74" text-anchor="middle">交派調查任務</text>
+<polyline class="ln ln-ok" points="448,166 292,166" marker-end="url(#f4-mok)"/>
+<text class="ts tok" x="369" y="158" text-anchor="middle">只回傳摘要</text>
+<rect class="bx" x="450" y="20" width="390" height="190" rx="10"/>
+<text class="t tb" x="466" y="44" text-anchor="start">子代理（獨立上下文）</text>
+<rect class="bx-s" x="466" y="58" width="170" height="28" rx="5"/>
+<text class="ts tink" x="551.0" y="76.5" text-anchor="middle">CLAUDE.md</text>
+<rect class="bx-s" x="652" y="58" width="172" height="28" rx="5"/>
+<text class="ts tink" x="738.0" y="76.5" text-anchor="middle">任務說明</text>
+<rect class="bx-s" x="466" y="100" width="112" height="32" rx="5"/>
+<text class="ts tink" x="522.0" y="120.5" text-anchor="middle">讀檔 1</text>
+<rect class="bx-s" x="588" y="100" width="112" height="32" rx="5"/>
+<text class="ts tink" x="644.0" y="120.5" text-anchor="middle">讀檔 2</text>
+<rect class="bx-s" x="710" y="100" width="112" height="32" rx="5"/>
+<text class="ts tink" x="766.0" y="120.5" text-anchor="middle">讀檔 3</text>
+<rect class="bx-s" x="466" y="140" width="112" height="32" rx="5"/>
+<text class="ts tink" x="522.0" y="160.5" text-anchor="middle">讀檔 4</text>
+<rect class="bx-s" x="588" y="140" width="112" height="32" rx="5"/>
+<text class="ts tink" x="644.0" y="160.5" text-anchor="middle">讀檔 5</text>
+<rect class="bx-s" x="710" y="140" width="112" height="32" rx="5"/>
+<text class="ts tink" x="766.0" y="160.5" text-anchor="middle">讀檔 6</text>
+<text class="ts" x="645" y="196" text-anchor="middle">合計約 6,100 tokens，不進主對話</text>
+</svg></div><figcaption><b>流程圖｜用子代理隔離大量讀檔。</b>數字取自官方文件的示意：子代理讀了約 6,100 tokens 的檔案，主對話只收到約 420 tokens 的摘要。</figcaption></figure>
+  <h3>常見誤解</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>誤解</th><th>正確觀念</th></tr></thead>
+    <tbody>
+      <tr><td class="x">上下文滿了會刪除最舊的對話</td><td>自動壓縮成摘要，細節會流失</td></tr>
+      <tr><td class="x">換成 1M 視窗就不用筆記</td><td>仍有 Context Rot，壓縮仍會發生</td></tr>
+      <tr><td class="x">建了 progress.md，Claude 會主動讀</td><td>要用 <code>@progress.md</code> 匯入或明寫指示</td></tr>
+      <tr><td class="x">用筆記可以省 Token</td><td>筆記也佔 Token，好處是規則能穩定取回</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>自我測驗</h3>
+  <div class="quiz" data-quiz="l1"></div>
+
+  <h3>情境問答</h3>
+  <details class="qa"><summary>Claude 到下午開始不照 Repository Pattern 寫，要怎麼處理？</summary><div class="a">
+    <ul>
+      <li>確認規則是否寫在 CLAUDE.md 或 <code>.claude/rules/</code>，而不是只在對話裡講過。</li>
+      <li>用 <code>/context</code> 確認檔案真的有載入。</li>
+      <li>長任務中主動 <code>/compact 聚焦在架構規則</code>，或換任務時 <code>/clear</code>。</li>
+      <li>如果一定不能違反，加上 lint 規則或 CI 檢查（第 4 堂的強制機制）。</li>
+    </ul></div></details>
+  <details class="qa"><summary>CLAUDE.md 已經寫到 400 行，Claude 好像越來越不照做？</summary><div class="a">
+    <ul>
+      <li>官方建議每個 CLAUDE.md 在 200 行內，太長反而降低遵守度。</li>
+      <li>只跟特定目錄有關的規則，拆成有 <code>paths</code> 的 rules。</li>
+      <li>多步驟的做法搬到 Skill（第 2、3 堂），需要時才載入。</li>
+      <li>刪掉 Claude 看程式碼就知道的內容（目錄結構、套件清單）。</li>
+    </ul></div></details>
+  <details class="qa"><summary>同事說：「我的 Claude 記得要用 pnpm，你的怎麼不記得？」</summary><div class="a">
+    <p>那是 auto memory，存在各自電腦的使用者目錄，不會同步給別人。團隊共同規則要寫進專案的 CLAUDE.md 並提交到 git。</p></div></details>
+  <details class="qa"><summary>要找出整個專案哪裡還在用舊 API，怕把上下文塞爆？</summary><div class="a">
+    <p>請 Claude「用 subagent 調查」。子代理在自己的上下文中讀檔，最後只回傳摘要，主對話保持乾淨。</p></div></details>
+
+  <h3>延伸閱讀</h3>
+  <ul class="refs">
+    <li><a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">How Claude remembers your project</a><span>CLAUDE.md、@ 匯入、rules、auto memory</span></li>
+    <li><a href="https://code.claude.com/docs/en/context-window" target="_blank" rel="noopener">Explore the context window</a><span>上下文組成、壓縮後保留什麼</span></li>
+    <li><a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Subagents</a><span>用子代理隔離大量讀檔</span></li>
+    <li><a href="https://www.trychroma.com/research/context-rot" target="_blank" rel="noopener">Chroma：Context Rot</a><span>輸入變長對模型表現的影響</span></li>
+  </ul>
+
+  <h3>本堂總結</h3>
+  <div class="twocol">
+    <div class="panel"><h5>白話版</h5><ul>
+      <li>Claude 的記憶像白板，寫滿了會被整理成重點，細節就不見了。</li>
+      <li>重要的規則要寫在「筆記本」（CLAUDE.md），每次開工都會重新翻開。</li>
+      <li>進度寫在 progress.md，並在 CLAUDE.md 註明要一起看。</li>
+      <li>Claude 自己也會記筆記（auto memory），但只在你的電腦上。</li>
+    </ul></div>
+    <div class="panel pro"><h5>專業版</h5><ul>
+      <li>上下文接近上限時觸發 auto-compact，對話被替換為結構化摘要；僅存在於對話的指令會遺失。</li>
+      <li>持久化指令放在專案 CLAUDE.md 與 <code>.claude/rules/</code>（可用 <code>paths</code> 做條件載入），壓縮後從磁碟重新注入。</li>
+      <li>狀態檔以 <code>@import</code> 納入啟動上下文；auto memory 為機器本機、每次載入 MEMORY.md 前 200 行／25KB。</li>
+      <li>CLAUDE.md 屬上下文而非強制設定，需搭配 permissions／Hooks 做確定性控制；研究型讀檔交由 subagent 隔離。</li>
+    </ul></div>
+  </div>
+  <div class="pager"><button type="button" data-go="home">← 課程總覽</button><button type="button" data-go="l2">第 2 堂 →</button></div>
+</section>
+
+<!-- ================= 第 2 堂 ================= -->
+<section class="page" id="l2" role="tabpanel" aria-labelledby="tab-l2" hidden>
+  <div class="page-head">
+    <div class="eyebrow">第 2 堂</div>
+    <h2>建立 API 規範 Skill</h2>
+    <p class="lead">解決「每支 API 回應格式、狀態碼、驗證方式都不一樣」。</p>
+    <div class="remember"><b>一句話記住</b><span>只有做某類工作才需要的詳細做法，做成 Skill；需要時才載入全文。</span></div>
+  </div>
+
+  <h3>背景知識：什麼是 Skill</h3>
+  <p>Skill 是一個資料夾，裡面的 <code>SKILL.md</code> 教 Claude「某件事該怎麼做」，也可以放範例、範本與腳本。它採<strong>漸進式載入</strong>：</p>
+  <ol class="steps">
+    <li>對話開始時，只載入每個 Skill 的<strong>名稱與 description</strong>。</li>
+    <li>Claude 判斷任務相關，或你輸入 <code>/api-standards</code> 時，才載入 SKILL.md <strong>全文</strong>。</li>
+    <li>輔助檔（如 <code>examples/</code>）只有 SKILL.md 指示、且需要時才會讀。</li>
+  </ol>
+  <figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 860 250" role="img" aria-label="Skill 分三階段載入：先只有名稱與說明，相符時載入全文，需要時才讀輔助檔" style="min-width:640px"><defs><marker id="f5-mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-n" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f5-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-a" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f5-mbad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-bad" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f5-mok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-ok" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f5-mwarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-warn" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="t tb" x="140" y="24" text-anchor="middle">① 對話開始：只放清單</text>
+<text class="t tb" x="430" y="24" text-anchor="middle">② 說明相符：載入全文</text>
+<text class="t tb" x="720" y="24" text-anchor="middle">③ 需要時：讀輔助檔</text>
+<rect class="bx-a" x="20" y="40" width="240" height="30" rx="5"/>
+<text class="ts tink" x="140.0" y="59.5" text-anchor="middle">api-standards：名稱＋說明</text>
+<rect class="bx" x="20" y="76" width="240" height="30" rx="5"/>
+<text class="ts tink" x="140.0" y="95.5" text-anchor="middle">pdf-report：名稱＋說明</text>
+<rect class="bx" x="20" y="112" width="240" height="30" rx="5" stroke-dasharray="5 4"/>
+<text class="ts" x="140.0" y="131.5" text-anchor="middle">add-api：不列入（只能手動）</text>
+<polyline class="ln ln-a" points="262,56 308,56" marker-end="url(#f5-ma)"/>
+<rect class="bx-a" x="310" y="40" width="240" height="102" rx="6"/>
+<text class="t tb" x="430" y="62" text-anchor="middle">api-standards／SKILL.md</text>
+<text class="ts tink" x="430" y="86" text-anchor="middle">1. 回應格式　2. 狀態碼</text>
+<text class="ts tink" x="430" y="104" text-anchor="middle">3. 驗證位置　4. 測試要求</text>
+<text class="ts tink" x="430" y="122" text-anchor="middle">範例見 examples/…</text>
+<polyline class="ln ln-a" points="552,124 598,124" marker-end="url(#f5-ma)"/>
+<rect class="bx-a" x="600" y="40" width="240" height="30" rx="5"/>
+<text class="mono" x="720.0" y="59.5" text-anchor="middle">examples/employee.service.js</text>
+<rect class="bx-a" x="600" y="76" width="240" height="30" rx="5"/>
+<text class="mono" x="720.0" y="95.5" text-anchor="middle">examples/employee.test.js</text>
+<rect class="bx" x="600" y="112" width="240" height="30" rx="5" stroke-dasharray="5 4"/>
+<text class="ts" x="720.0" y="131.5" text-anchor="middle">references/（沒用到就不讀）</text>
+<text class="ts ta" x="430" y="170" text-anchor="middle">觸發：你說「實作 POST API」，與 description 相符</text>
+<text class="ts" x="20" y="206" text-anchor="start">佔用上下文</text>
+<rect class="track" x="20" y="216" width="240" height="10" rx="5"/>
+<rect class="fill-a" x="20" y="216" width="36" height="10" rx="5"/>
+<rect class="track" x="310" y="216" width="240" height="10" rx="5"/>
+<rect class="fill-a" x="310" y="216" width="120" height="10" rx="5"/>
+<rect class="track" x="600" y="216" width="240" height="10" rx="5"/>
+<rect class="fill-a" x="600" y="216" width="180" height="10" rx="5"/>
+</svg></div><figcaption><b>流程圖｜Skill 的漸進式載入。</b>設了 disable-model-invocation 的 Skill 連說明都不會出現在清單，只有你輸入 /名稱 才載入。</figcaption></figure>
+<div class="callout info"><span class="tag">寫法</span>description 要寫清楚「做什麼、什麼時候用」，關鍵用途放前面；description 加 when_to_use 超過 1,536 字元會被截斷。　<a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">官方文件：Extend Claude with skills ↗</a></div>
+
+  <h4>CLAUDE.md、rules、Skill 怎麼分工</h4>
+  <div class="tbl"><table>
+    <thead><tr><th>機制</th><th>適合放</th><th>載入時機</th></tr></thead>
+    <tbody>
+      <tr><td class="k">CLAUDE.md</td><td>每次都要知道的事：指令、架構原則</td><td>每次對話開始</td></tr>
+      <tr><td class="k">.claude/rules/</td><td>只跟特定路徑有關的規則</td><td>每次，或讀到相符檔案時</td></tr>
+      <tr><td class="k">Skill</td><td>特定任務的詳細做法、範例、流程</td><td>需要時才載入全文</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>問題：API 細節不一致</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>API</th><th>實際回應（示意）</th></tr></thead>
+    <tbody>
+      <tr><td class="k">GET /api/employees</td><td><code>{ code: 200, data: [...], message: "success" }</code></td></tr>
+      <tr><td class="k">POST /api/employees</td><td><code>{ success: true, payload: {...} }</code></td></tr>
+      <tr><td class="k">DELETE /api/employees/:id</td><td><code>{ deleted: true, id: 1 }</code></td></tr>
+    </tbody>
+  </table></div>
+  <p>另外還有：新增成功回 200（應為 201）、驗證有時寫在 Controller 有時寫在 Service、測試只測成功情況。</p>
+
+  <h3>實作步驟</h3>
+  <h4>步驟 1：建立 Skill 目錄</h4>
+  <div class="code"><div class="cap"><span>目錄結構</span><button type="button" data-copy>複製</button></div><pre>.claude/skills/
+└── api-standards/
+    ├── SKILL.md                  ← 必要
+    └── examples/
+        ├── employee.service.js   ← Service 驗證範例
+        └── employee.test.js      ← 測試範例</pre></div>
+  <p>專案 Skill 放 <code>.claude/skills/</code> 並提交到 git，全組都能用；個人 Skill 放 <code>~/.claude/skills/</code>。</p>
+
+  <h4>步驟 2：撰寫 SKILL.md</h4>
+  <div class="code"><div class="cap"><span>.claude/skills/api-standards/SKILL.md</span><button type="button" data-copy>複製</button></div><pre>---
+name: api-standards
+description: 員工系統 REST API 規範。實作或修改 API 端點、設計回應格式、
+  撰寫 API 測試時使用。定義回應格式、狀態碼、驗證位置與測試要求。
+paths:
+  - "src/**/*.js"
+  - "tests/**/*.js"
+---
+
+# API 開發規範
+
+## 1. 回應格式
+- 成功（200、201）：{ "code": 200, "data": { ... }, "message": "success" }
+- 失敗（4xx、5xx）：{ "code": 400, "data": null, "message": "...", "errors": { ... } }
+- errors 只在欄位驗證失敗時提供；錯誤訊息不可包含 SQL 或堆疊追蹤
+
+## 2. 狀態碼
+- 200：GET、PUT、DELETE 成功（本專案 DELETE 不使用 204）
+- 201：POST 新增成功
+- 400 驗證失敗 · 401 未登入 · 403 無權限 · 404 不存在 · 409 資料衝突 · 500 伺服器錯誤
+
+## 3. 輸入驗證
+- 驗證寫在 Service 層，Controller 不做驗證、不碰資料庫
+- 順序：必填 → 格式 → 唯一性 → 業務規則 → 呼叫 Repository
+- 唯一性除了先查詢，資料庫也必須有 UNIQUE 限制；寫入衝突同樣回 409
+- 範例：examples/employee.service.js
+
+## 4. 測試要求
+- 每支 API 至少測：成功、400（必填／格式）、409（重複）、404（不存在）
+- 每個測試前清空測試資料，測試之間不可互相依賴
+- 範例：examples/employee.test.js</pre></div>
+  <div class="callout warn"><span class="tag">舊版錯誤</span>舊版在這裡寫了 <code>allowed-tools: Read, Write, Grep, Bash</code>。這個欄位的意思是「呼叫此 Skill 的那一回合，列出的工具<strong>不用詢問</strong>」，不是限制。規範型 Skill 不需要執行指令，應刪除。</div>
+  <div class="callout info"><span class="tag">204 的矛盾</span>HTTP 規定 204 No Content 不能帶回應內容，和「所有回應都用統一格式」衝突。擇一：DELETE 回 200，或回 204 並在規範中註明為例外。錯誤格式可參考 <a href="https://www.rfc-editor.org/rfc/rfc9457" target="_blank" rel="noopener">RFC 9457 Problem Details ↗</a>。</div>
+
+  <h4>步驟 3：範例檔（驗證寫在 Service）</h4>
+<figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 880 262" role="img" aria-label="POST 請求依序經過 Controller、Service、Repository 到資料庫；驗證錯誤與唯一鍵衝突由 errorHandler 轉成統一格式" style="min-width:640px"><defs><marker id="f6-mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-n" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f6-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-a" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f6-mbad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-bad" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f6-mok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-ok" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f6-mwarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-warn" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="bx" x="20" y="50" width="110" height="60" rx="8"/>
+<text class="t tb" x="75.0" y="84.5" text-anchor="middle">用戶端</text>
+<rect class="bx" x="170" y="50" width="150" height="60" rx="8"/>
+<text class="t tb" x="245.0" y="75.5" text-anchor="middle">Controller</text>
+<text class="ts" x="245.0" y="93.5" text-anchor="middle">只處理 HTTP</text>
+<rect class="bx-a" x="370" y="40" width="190" height="80" rx="8"/>
+<text class="t tb" x="465.0" y="66.5" text-anchor="middle">Service</text>
+<text class="ts" x="465.0" y="84.5" text-anchor="middle">① 必填 ② 格式</text>
+<text class="ts" x="465.0" y="102.5" text-anchor="middle">③ 唯一性查詢</text>
+<rect class="bx" x="610" y="50" width="130" height="60" rx="8"/>
+<text class="t tb" x="675.0" y="75.5" text-anchor="middle">Repository</text>
+<text class="ts" x="675.0" y="93.5" text-anchor="middle">只做 CRUD</text>
+<rect class="bx-s" x="766" y="50" width="106" height="60" rx="8"/>
+<text class="t tb" x="819.0" y="75.5" text-anchor="middle">PostgreSQL</text>
+<text class="mono" x="819.0" y="93.5" text-anchor="middle">UNIQUE(email)</text>
+<polyline class="ln" points="130,72 168,72" marker-end="url(#f6-mn)"/>
+<text class="ts" x="149" y="64" text-anchor="middle">POST</text>
+<polyline class="ln" points="320,72 368,72" marker-end="url(#f6-mn)"/>
+<polyline class="ln" points="560,72 608,72" marker-end="url(#f6-mn)"/>
+<text class="mono" x="587" y="90" text-anchor="middle">create</text>
+<polyline class="ln" points="740,72 764,72" marker-end="url(#f6-mn)"/>
+<polyline class="ln ln-ok" points="168,98 132,98" marker-end="url(#f6-mok)"/>
+<text class="ts tok" x="150" y="92" text-anchor="middle">201</text>
+<polyline class="ln ln-bad" points="819,110 819,150 520,150 520,122" marker-end="url(#f6-mbad)"/>
+<text class="ts tbad" x="672" y="168" text-anchor="middle">23505 唯一鍵衝突</text>
+<polyline class="ln ln-bad" points="420,120 420,214 322,214" marker-end="url(#f6-mbad)"/>
+<text class="ts tbad" x="430" y="190" text-anchor="start">拋出錯誤</text>
+<rect class="bx-w" x="170" y="190" width="150" height="48" rx="8"/>
+<text class="t tb" x="245.0" y="209.5" text-anchor="middle">errorHandler</text>
+<text class="ts" x="245.0" y="227.5" text-anchor="middle">統一錯誤格式</text>
+<polyline class="ln ln-bad" points="170,214 75,214 75,112" marker-end="url(#f6-mbad)"/>
+<text class="ts tbad" x="122" y="232" text-anchor="middle">400／409</text>
+</svg></div><figcaption><b>流程圖｜POST /api/employees 在三層架構中的路徑。</b>驗證集中在 Service；資料庫的 UNIQUE 限制是並行寫入時的最後防線，錯誤統一由 errorHandler 轉成 400／409。</figcaption></figure>
+  <div class="code"><div class="cap"><span>examples/employee.service.js</span><button type="button" data-copy>複製</button></div><pre>async function hireEmployee(input) {
+  const errors = {};
+  if (!input.name) errors.name = '姓名必填';
+  if (!input.email) errors.email = '信箱必填';
+  if (!input.department) errors.department = '部門必填';
+  if (Object.keys(errors).length) throw new ValidationError(errors);
+
+  if (!EMAIL_RE.test(input.email)) {
+    throw new ValidationError({ email: '信箱格式不正確' });
+  }
+
+  if (await employeeRepository.findByEmail(input.email)) {
+    throw new ConflictError('信箱已被使用');
+  }
+
+  try {
+    return await employeeRepository.create(input);
+  } catch (err) {
+    <span class="c">// PostgreSQL 唯一鍵衝突：資料庫 UNIQUE 是最後防線</span>
+    if (err.code === '23505') throw new ConflictError('信箱已被使用');
+    throw err;
+  }
+}</pre></div>
+  <div class="code"><div class="cap"><span>controllers/employeeController.js</span><button type="button" data-copy>複製</button></div><pre>async function createEmployee(req, res, next) {
+  try {
+    const employee = await employeeService.hireEmployee(req.body);
+    res.status(201).json({ code: 201, data: employee, message: 'success' });
+  } catch (err) {
+    next(err);   <span class="c">// 交給共用 errorHandler 轉成 400／409／500</span>
+  }
+}</pre></div>
+  <div class="code"><div class="cap"><span>examples/employee.test.js</span><button type="button" data-copy>複製</button></div><pre>describe('POST /api/employees', () => {
+  const valid = { name: '王小明', email: 'wang@company.com', department: '工程' };
+
+  beforeEach(async () => { await resetTestDatabase(); });
+
+  test('新增成功回傳 201', async () => {
+    const res = await request(app).post('/api/employees').send(valid);
+    expect(res.status).toBe(201);
+  });
+
+  test('email 重複回傳 409', async () => {
+    await request(app).post('/api/employees').send(valid);
+    const res = await request(app).post('/api/employees').send({ ...valid, name: '李大衛' });
+    expect(res.status).toBe(409);
+  });
+});</pre></div>
+
+  <h4>步驟 4：確認 Skill 生效</h4>
+  <ol class="steps">
+    <li>輸入 <code>/</code>，選單應出現 <code>api-standards</code>。</li>
+    <li>要求「實作 POST /api/employees」，觀察 Claude 是否載入 api-standards。</li>
+    <li>沒有自動載入：檢查 description 是否寫出使用時機，或手動輸入 <code>/api-standards</code>。</li>
+  </ol>
+
+  <h3>常用 frontmatter 欄位</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>欄位</th><th>用途</th></tr></thead>
+    <tbody>
+      <tr><td class="k"><code>name</code></td><td>顯示名稱，選填，預設為資料夾名稱</td></tr>
+      <tr><td class="k"><code>description</code></td><td>做什麼、何時用；Claude 靠它判斷是否載入</td></tr>
+      <tr><td class="k"><code>when_to_use</code></td><td>補充觸發情境，接在 description 後</td></tr>
+      <tr><td class="k"><code>paths</code></td><td>只在處理相符檔案時自動載入</td></tr>
+      <tr><td class="k"><code>disable-model-invocation</code></td><td><code>true</code>：Claude 不自動載入，只能手動 <code>/名稱</code></td></tr>
+      <tr><td class="k"><code>user-invocable</code></td><td><code>false</code>：不出現在 <code>/</code> 選單，只給 Claude 用</td></tr>
+      <tr><td class="k"><code>allowed-tools</code></td><td>呼叫該 Skill 的那一回合，這些工具免詢問</td></tr>
+      <tr><td class="k"><code>disallowed-tools</code></td><td>Skill 執行期間禁止使用的工具</td></tr>
+      <tr><td class="k"><code>context: fork</code></td><td>在獨立的子代理上下文執行</td></tr>
+    </tbody>
+  </table></div>
+  <p>SKILL.md 建議 500 行以內，細節放輔助檔。壓縮後每個 Skill 只重新注入前 5,000 Token，<strong>最重要的規則放最前面</strong>。</p>
+
+  <h3>自我測驗</h3>
+  <div class="quiz" data-quiz="l2"></div>
+
+  <h3>情境問答</h3>
+  <details class="qa"><summary>Claude 寫 API 時沒有套用 api-standards，怎麼排查？</summary><div class="a">
+    <ul>
+      <li>description 是否寫出「實作 API、寫 API 測試時使用」這類使用時機，關鍵字放前面。</li>
+      <li>如果設了 <code>paths</code>，確認正在處理的檔案符合路徑。</li>
+      <li>確認沒有誤設 <code>disable-model-invocation: true</code>。</li>
+      <li>急用時直接輸入 <code>/api-standards</code> 手動載入。</li>
+    </ul></div></details>
+  <details class="qa"><summary>這份規範想讓組內每個專案都用，要怎麼分發？</summary><div class="a">
+    <p>個人使用可放 <code>~/.claude/skills/</code>。要給全組、多個專案一致使用，建議打包成 <strong>Plugin</strong>，一次安裝即可取得 skills、hooks 與 MCP 設定。<a href="https://code.claude.com/docs/en/plugins" target="_blank" rel="noopener">官方文件：Plugins ↗</a></p></div></details>
+  <details class="qa"><summary>SKILL.md 已經 700 行，要怎麼整理？</summary><div class="a">
+    <ul>
+      <li>主檔留下規則摘要，細節拆到 <code>references/</code> 或 <code>examples/</code>。</li>
+      <li>在 SKILL.md 寫清楚「需要 X 時讀 references/x.md」，Claude 才會去讀。</li>
+      <li>最關鍵的規則放在檔案開頭，壓縮後被截斷也不會丟。</li>
+    </ul></div></details>
+  <details class="qa"><summary>先查 email 再新增，為什麼還會出現重複資料？</summary><div class="a">
+    <p>兩個請求幾乎同時進來時，都會查到「沒有重複」再各自寫入。解法是在資料庫加 UNIQUE 限制，並把唯一鍵衝突錯誤轉成 409。</p></div></details>
+
+  <h3>延伸閱讀</h3>
+  <ul class="refs">
+    <li><a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Extend Claude with skills</a><span>frontmatter 完整欄位、參數、載入方式</span></li>
+    <li><a href="https://code.claude.com/docs/en/plugins" target="_blank" rel="noopener">Plugins</a><span>把 skills、hooks、MCP 打包分發</span></li>
+    <li><a href="https://www.rfc-editor.org/rfc/rfc9457" target="_blank" rel="noopener">RFC 9457：Problem Details for HTTP APIs</a><span>錯誤回應格式的標準參考</span></li>
+  </ul>
+
+  <h3>本堂總結</h3>
+  <div class="twocol">
+    <div class="panel"><h5>白話版</h5><ul>
+      <li>Skill 就像給 Claude 的「作業手冊」，需要時才翻開，不佔平常的記憶。</li>
+      <li>手冊封面（description）要寫清楚什麼時候該翻。</li>
+      <li>手冊內容不能自相矛盾，例如 204 不能又要求帶內容。</li>
+      <li>規範型手冊不需要給 Claude 額外權限。</li>
+    </ul></div>
+    <div class="panel pro"><h5>專業版</h5><ul>
+      <li>Skill 採漸進式揭露：啟動時僅注入 name／description 索引，觸發後載入 SKILL.md 全文，輔助檔按需讀取。</li>
+      <li>觸發條件由 description、when_to_use 與 <code>paths</code> 共同決定；也可由使用者以 <code>/skill-name</code> 顯式呼叫。</li>
+      <li><code>allowed-tools</code> 為單回合預先授權，非白名單限制；知識型 Skill 應不授權。</li>
+      <li>規範需內部一致（狀態碼語意、分層職責），並以資料庫約束處理並行寫入的唯一性。</li>
+    </ul></div>
+  </div>
+  <div class="pager"><button type="button" data-go="l1">← 第 1 堂</button><button type="button" data-go="l3">第 3 堂 →</button></div>
+</section>
+
+<!-- ================= 第 3 堂 ================= -->
+<section class="page" id="l3" role="tabpanel" aria-labelledby="tab-l3" hidden>
+  <div class="page-head">
+    <div class="eyebrow">第 3 堂</div>
+    <h2>定義開發流程斜線指令</h2>
+    <p class="lead">解決「有時完整做完，有時跳過測試或進度更新」。</p>
+    <div class="remember"><b>一句話記住</b><span>斜線指令就是 Skill；有副作用的流程設成只能由人手動觸發。</span></div>
+  </div>
+
+  <h3>背景知識</h3>
+  <h4>斜線指令已併入 Skills</h4>
+  <p><code>.claude/commands/add-api.md</code> 和 <code>.claude/skills/add-api/SKILL.md</code> 都會產生 <code>/add-api</code>，效果相同；同名時 Skill 優先。舊檔仍可使用，新寫的建議用 Skill 格式，因為可以放輔助檔、控制由誰觸發。</p>
+
+  <h4>知識型 Skill vs 流程型 Skill</h4>
+  <div class="tbl"><table>
+    <thead><tr><th>比較</th><th>知識型（第 2 堂）</th><th>流程型（本堂）</th></tr></thead>
+    <tbody>
+      <tr><td class="k">內容</td><td>怎麼做才對</td><td>依序做哪些步驟</td></tr>
+      <tr><td class="k">誰觸發</td><td>Claude 判斷相關時自動載入</td><td>只由人輸入 <code>/add-api</code></td></tr>
+      <tr><td class="k">關鍵設定</td><td>寫好 description</td><td><code>disable-model-invocation: true</code></td></tr>
+    </tbody>
+  </table></div>
+
+<figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 820 262" role="img" aria-label="預設兩者都能觸發；disable-model-invocation 只有你能觸發；user-invocable false 只有 Claude 能載入" style="min-width:640px"><defs><marker id="f8-mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-n" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f8-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-a" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f8-mbad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-bad" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f8-mok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-ok" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f8-mwarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-warn" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="bx-s" x="20" y="14" width="780" height="38" rx="8"/>
+<text class="t tb" x="410.0" y="37.5" text-anchor="middle">你：輸入 /名稱</text>
+<rect class="bx-s" x="20" y="210" width="780" height="38" rx="8"/>
+<text class="t tb" x="410.0" y="233.5" text-anchor="middle">Claude：依 description 自動載入</text>
+<rect class="bx-a" x="20" y="104" width="240" height="62" rx="8"/>
+<text class="mono tink" x="140.0" y="130.5" text-anchor="middle">預設</text>
+<text class="ts" x="140.0" y="148.5" text-anchor="middle">api-standards</text>
+<rect class="bx-a" x="290" y="104" width="240" height="62" rx="8"/>
+<text class="mono tink" x="410.0" y="130.5" text-anchor="middle">disable-model-invocation: true</text>
+<text class="ts" x="410.0" y="148.5" text-anchor="middle">add-api、ship</text>
+<rect class="bx-a" x="560" y="104" width="240" height="62" rx="8"/>
+<text class="mono tink" x="680.0" y="130.5" text-anchor="middle">user-invocable: false</text>
+<text class="ts" x="680.0" y="148.5" text-anchor="middle">背景知識</text>
+<polyline class="ln" points="140,52 140,102" marker-end="url(#f8-mn)"/>
+<polyline class="ln" points="410,52 410,102" marker-end="url(#f8-mn)"/>
+<polyline class="ln ln-bad" points="680,52 680,102" stroke-dasharray="5 4" marker-end="url(#f8-mbad)"/>
+<text class="ts tbad" x="692" y="82" text-anchor="start">✗ 不在 / 選單</text>
+<polyline class="ln" points="140,210 140,168" marker-end="url(#f8-mn)"/>
+<polyline class="ln ln-bad" points="410,210 410,168" stroke-dasharray="5 4" marker-end="url(#f8-mbad)"/>
+<text class="ts tbad" x="422" y="194" text-anchor="start">✗ 不會自動載入</text>
+<polyline class="ln" points="680,210 680,168" marker-end="url(#f8-mn)"/>
+</svg></div><figcaption><b>觀念圖｜誰能觸發這個 Skill。</b>同一種 SKILL.md，用一個欄位決定入口；有副作用的流程（改程式、推送）只留給人。</figcaption></figure>
+  <h4>常用內建指令</h4>
+  <div class="tbl"><table>
+    <tbody>
+      <tr><td class="k"><code>/init</code></td><td>產生 CLAUDE.md</td></tr>
+      <tr><td class="k"><code>/memory</code>、<code>/context</code></td><td>管理記憶檔、查看上下文用量</td></tr>
+      <tr><td class="k"><code>/compact</code>、<code>/clear</code></td><td>壓縮、清空對話</td></tr>
+      <tr><td class="k"><code>/agents</code></td><td>管理子代理</td></tr>
+      <tr><td class="k"><code>/hooks</code>、<code>/permissions</code>、<code>/mcp</code></td><td>檢視 Hooks、權限、MCP 連線</td></tr>
+    </tbody>
+  </table></div>
+  <p>自訂指令不要和內建指令同名。<a href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">官方文件：內建指令清單 ↗</a></p>
+
+  <h3>問題：流程不一致</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>步驟（示意）</th><th>API 1</th><th>API 2</th><th>API 3</th><th>API 4</th></tr></thead>
+    <tbody>
+      <tr><td class="k">參考既有 API</td><td>有</td><td>有</td><td>有</td><td class="x">略過</td></tr>
+      <tr><td class="k">測試</td><td>完整</td><td>完整</td><td class="x">2 種</td><td class="x">只測成功</td></tr>
+      <tr><td class="k">更新進度</td><td>有</td><td>有</td><td class="x">略過</td><td class="x">略過</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>實作步驟</h3>
+  <h4>步驟 1：目錄結構</h4>
+  <div class="code"><div class="cap"><span>目錄結構</span><button type="button" data-copy>複製</button></div><pre>.claude/skills/
+├── api-standards/      ← 第 2 堂（知識型）
+│   └── SKILL.md
+└── add-api/            ← 本堂（流程型）
+    ├── SKILL.md
+    └── checklist.md    ← 完成前自我檢查</pre></div>
+
+  <h4>步驟 2：撰寫 add-api/SKILL.md</h4>
+  <div class="code"><div class="cap"><span>.claude/skills/add-api/SKILL.md</span><button type="button" data-copy>複製</button></div><pre>---
+description: 依團隊標準流程新增一支 REST API（三層架構＋測試＋更新進度）
+argument-hint: &lt;HTTP方法&gt; &lt;API路徑&gt;
+arguments: [method, path]
+disable-model-invocation: true
+allowed-tools:
+  - Edit
+  - Write
+  - Bash(npm test *)
+---
+
+# 新增 API：$method $path
+
+## 目前狀態
+- 工作區變更：!`git status --short`
+
+## 步驟 1：理解既有架構
+- 確認 CLAUDE.md 的架構原則與 progress.md 的進度
+- 若 $method $path 已存在或不在規劃中，先停下來詢問我
+
+## 步驟 2：參考既有寫法
+- 用 Grep 在 src/ 找出同資源的既有路由
+- 讀最接近的一支 API 與測試，沿用相同寫法
+
+## 步驟 3：依規範實作
+- 依 api-standards skill 的格式、狀態碼與驗證規則
+- Repository 只做資料存取；Service 負責驗證；Controller 只處理 HTTP
+
+## 步驟 4：撰寫測試
+- 涵蓋成功、400、404、409
+- 執行 npm test，全部通過才進下一步
+
+## 步驟 5：更新 progress.md
+
+## 步驟 6：依 checklist.md 自我檢查並回報
+- 不要 commit 或 push（由 /ship 處理）</pre></div>
+
+  <div class="tbl"><table>
+    <thead><tr><th>寫法</th><th>說明</th></tr></thead>
+    <tbody>
+      <tr><td class="k">沒有 <code>name</code></td><td>指令名稱取自資料夾名稱</td></tr>
+      <tr><td class="k"><code>arguments</code></td><td><code>/add-api POST /api/employees</code> → <code>$method</code>=POST、<code>$path</code>=/api/employees；也可用 <code>$ARGUMENTS</code>、<code>$0</code>、<code>$1</code></td></tr>
+      <tr><td class="k"><code>disable-model-invocation</code></td><td>會改程式的流程，只允許人觸發</td></tr>
+      <tr><td class="k"><code>allowed-tools</code></td><td>唯讀工具本來就免詢問；只授權 Edit、Write 與 <code>npm test</code></td></tr>
+      <tr><td class="k"><code>!`git status --short`</code></td><td>載入 Skill 前先執行，結果直接放進內容</td></tr>
+      <tr><td class="k">「用 Grep 找…」</td><td>Grep 是內建工具，用文字描述即可，不要寫成 bash 程式碼</td></tr>
+    </tbody>
+  </table></div>
+  <figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 890 300" role="img" aria-label="輸入 /add-api 後先替換參數並執行前置指令，再依序完成六個步驟，測試失敗會回到實作" style="min-width:640px"><defs><marker id="f7-mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-n" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f7-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-a" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f7-mbad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-bad" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f7-mok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-ok" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f7-mwarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-warn" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="bx" x="20" y="24" width="250" height="56" rx="8"/>
+<text class="t tb" x="145.0" y="47.5" text-anchor="middle">你輸入</text>
+<text class="mono" x="145.0" y="65.5" text-anchor="middle">/add-api POST /api/employees</text>
+<rect class="bx-a" x="320" y="24" width="260" height="56" rx="8"/>
+<text class="t tb" x="450.0" y="47.5" text-anchor="middle">前置處理</text>
+<text class="mono" x="450.0" y="65.5" text-anchor="middle">$method=POST　$path=/api/employees</text>
+<rect class="bx-a" x="630" y="24" width="240" height="56" rx="8"/>
+<text class="t tb" x="750.0" y="47.5" text-anchor="middle">SKILL.md 內容注入對話</text>
+<text class="ts" x="750.0" y="65.5" text-anchor="middle">含 git status 輸出</text>
+<polyline class="ln" points="270,52 318,52" marker-end="url(#f7-mn)"/>
+<polyline class="ln" points="580,52 628,52" marker-end="url(#f7-mn)"/>
+<polyline class="ln" points="750,80 750,116 80,116 80,148" marker-end="url(#f7-mn)"/>
+<text class="ts" x="415" y="108" text-anchor="middle">Claude 依序執行</text>
+<rect class="bx" x="20" y="150" width="120" height="50" rx="8"/>
+<text class="t tb" x="80.0" y="179.5" text-anchor="middle">① 理解架構</text>
+<polyline class="ln" points="140,175 158,175" marker-end="url(#f7-mn)"/>
+<rect class="bx" x="160" y="150" width="120" height="50" rx="8"/>
+<text class="t tb" x="220.0" y="179.5" text-anchor="middle">② 參考既有</text>
+<polyline class="ln" points="280,175 298,175" marker-end="url(#f7-mn)"/>
+<rect class="bx" x="300" y="150" width="130" height="50" rx="8"/>
+<text class="t tb" x="365.0" y="179.5" text-anchor="middle">③ 依規範實作</text>
+<polyline class="ln" points="430,175 448,175" marker-end="url(#f7-mn)"/>
+<rect class="bx-a" x="450" y="150" width="110" height="50" rx="8"/>
+<text class="t tb" x="505.0" y="179.5" text-anchor="middle">④ 跑測試</text>
+<polyline class="ln ln-ok" points="560,175 598,175" marker-end="url(#f7-mok)"/>
+<rect class="bx" x="600" y="150" width="120" height="50" rx="8"/>
+<text class="t tb" x="660.0" y="179.5" text-anchor="middle">⑤ 更新進度</text>
+<polyline class="ln" points="720,175 738,175" marker-end="url(#f7-mn)"/>
+<rect class="bx" x="740" y="150" width="130" height="50" rx="8"/>
+<text class="t tb" x="805.0" y="179.5" text-anchor="middle">⑥ 檢查並回報</text>
+<text class="ts tok" x="580" y="168" text-anchor="middle">通過</text>
+<polyline class="ln ln-bad" points="505,200 505,246 365,246 365,202" marker-end="url(#f7-mbad)"/>
+<text class="ts tbad" x="435" y="266" text-anchor="middle">npm test 失敗 → 修正後重跑</text>
+<text class="ts" x="805" y="226" text-anchor="middle">不 commit、不 push</text>
+<text class="ts" x="805" y="244" text-anchor="middle">（交給 /ship）</text>
+</svg></div><figcaption><b>流程圖｜/add-api 從輸入到回報。</b>測試沒通過就回到步驟 ③ 修正；流程到回報為止，commit 與 push 交給第 4 堂的 /ship。</figcaption></figure>
+<div class="callout warn"><span class="tag">不是 100% 強制</span>流程型 Skill 仍是「指示」，能大幅提高一致性，但模型仍可能跳步。一定要做到的事，請用第 4 堂的 Hooks 與 CI 必要檢查。</div>
+
+  <h4>步驟 3：checklist.md</h4>
+  <div class="code"><div class="cap"><span>.claude/skills/add-api/checklist.md</span><button type="button" data-copy>複製</button></div><pre># 新增 API 完成前檢查
+- [ ] SQL 只出現在 src/repositories/
+- [ ] Controller 沒有直接呼叫 Repository
+- [ ] 回應格式、狀態碼符合 api-standards
+- [ ] 測試涵蓋成功、400、404、409，npm test 全數通過
+- [ ] progress.md 已更新</pre></div>
+
+  <h4>步驟 4：使用與延伸</h4>
+  <div class="code"><div class="cap"><span>在 Claude Code 中輸入</span><button type="button" data-copy>複製</button></div><pre>/add-api POST /api/employees
+/add-api DELETE /api/employees/:id</pre></div>
+  <div class="tbl"><table>
+    <thead><tr><th>可比照建立</th><th>流程重點</th></tr></thead>
+    <tbody>
+      <tr><td class="k"><code>/bug-fix</code></td><td>重現 → 先寫會失敗的測試 → 修正 → 測試通過 → 記錄原因</td></tr>
+      <tr><td class="k"><code>/refactor</code></td><td>確認測試通過 → 小步重構 → 每步跑測試</td></tr>
+      <tr><td class="k"><code>/ship</code></td><td>測試 → 分支 → commit → push → PR（第 4 堂）</td></tr>
+    </tbody>
+  </table></div>
+
+  <h4>舊的 commands 檔怎麼轉</h4>
+  <ol class="steps">
+    <li>建立 <code>.claude/skills/add-api/</code>，把檔案搬進去改名為 <code>SKILL.md</code>。</li>
+    <li>補上 <code>disable-model-invocation: true</code> 與參數。</li>
+    <li>刪除舊的 commands 檔，避免兩份內容不同步。</li>
+  </ol>
+
+  <h3>自我測驗</h3>
+  <div class="quiz" data-quiz="l3"></div>
+
+  <h3>情境問答</h3>
+  <details class="qa"><summary>我沒下指令，Claude 卻自己開始跑 /add-api 的流程？</summary><div class="a">
+    <p>在 frontmatter 加上 <code>disable-model-invocation: true</code>。加了之後 Claude 不會自動載入，它的說明也不會出現在啟動上下文，只有你輸入 <code>/add-api</code> 才會執行。</p></div></details>
+  <details class="qa"><summary>流程要讀很多檔案，會不會把主對話塞滿？</summary><div class="a">
+    <p>可加 <code>context: fork</code>，讓 Skill 在獨立的子代理上下文執行，只把結果回傳主對話。</p></div></details>
+  <details class="qa"><summary>我在 bash 區塊寫了 Grep('POST', 'src/')，為什麼執行失敗？</summary><div class="a">
+    <p>Grep、Read、Edit 是 Claude Code 的內建工具，不是 shell 指令。在 Skill 裡用文字描述要做什麼即可；需要事先帶入指令輸出時，才用 <code>!`指令`</code> 語法。</p></div></details>
+  <details class="qa"><summary>commands 與 skills 裡剛好有同名檔案，會用哪一個？</summary><div class="a">
+    <p>Skill 優先。建議刪除舊的 commands 檔，避免有人改錯檔案。</p></div></details>
+
+  <h3>延伸閱讀</h3>
+  <ul class="refs">
+    <li><a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Extend Claude with skills</a><span>參數替換、動態注入、控制呼叫者</span></li>
+    <li><a href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">Commands</a><span>內建指令清單</span></li>
+    <li><a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Subagents</a><span>搭配 context: fork 使用</span></li>
+  </ul>
+
+  <h3>本堂總結</h3>
+  <div class="twocol">
+    <div class="panel"><h5>白話版</h5><ul>
+      <li>斜線指令像「SOP 按鈕」，按一下就照同一套步驟做。</li>
+      <li>現在它和 Skill 是同一種檔案，只是設定成由人按。</li>
+      <li>按鈕可以帶參數，例如要新增哪一支 API。</li>
+      <li>SOP 是提醒，不是鎖；真正要擋的要靠第 4 堂的機制。</li>
+    </ul></div>
+    <div class="panel pro"><h5>專業版</h5><ul>
+      <li>自訂 slash commands 已整合至 Skills，<code>.claude/commands/</code> 保持相容，同名時以 Skill 為準。</li>
+      <li>流程型 Skill 以 <code>disable-model-invocation: true</code> 排除模型自動觸發，並透過 <code>arguments</code>／<code>$N</code> 參數化。</li>
+      <li>以 <code>!`cmd`</code> 做前置上下文注入；<code>allowed-tools</code> 採最小授權；<code>context: fork</code> 隔離執行上下文。</li>
+      <li>流程遵循度屬機率性，關鍵關卡需以 Hooks 或 CI required checks 做確定性把關。</li>
+    </ul></div>
+  </div>
+  <div class="pager"><button type="button" data-go="l2">← 第 2 堂</button><button type="button" data-go="l4">第 4 堂 →</button></div>
+</section>
+
+<!-- ================= 第 4 堂 ================= -->
+<section class="page" id="l4" role="tabpanel" aria-labelledby="tab-l4" hidden>
+  <div class="page-head">
+    <div class="eyebrow">第 4 堂</div>
+    <h2>設定外部系統連接與安全防線</h2>
+    <p class="lead">解決「推送與建 PR 靠手動」，同時避免 AI 把機密推上去或直接改到 main。</p>
+    <div class="remember"><b>一句話記住</b><span>讓 Claude 能推送之前，先用 permissions、Hooks、分支保護把關。</span></div>
+  </div>
+
+  <h3>背景知識</h3>
+  <h4>Claude Code 可以直接操作 GitHub</h4>
+  <p>Claude Code 透過 Bash 執行 git、npm、gh。只要安裝並登入 GitHub CLI（gh），就能直接 <code>gh pr create</code>。舊版說「無法建立 PR」並不正確，真正要處理的是<strong>認證與權限範圍</strong>。會不會先詢問你，取決於<strong>權限模式</strong>：Manual 模式除了唯讀指令都會詢問；Pro、Max、Team 方案的預設起始模式是 auto，由分類器審查（見「補充觀念」）。</p>
+
+  <h4>MCP：以標準方式連接外部服務</h4>
+  <div class="tbl"><table>
+    <tbody>
+      <tr><td class="k">傳輸方式</td><td>遠端服務用 HTTP（SSE 已淘汰）；本機程式用 stdio</td></tr>
+      <tr><td class="k">設定範圍</td><td>local（自己、目前專案）· project（<code>.mcp.json</code>，進 git 共用）· user（自己所有專案）</td></tr>
+      <tr><td class="k">管理</td><td><code>claude mcp list</code>、<code>/mcp</code>（狀態與 OAuth 登入）</td></tr>
+      <tr><td class="k">上下文</td><td>工具預設延遲載入，需要時才載入完整定義</td></tr>
+    </tbody>
+  </table></div>
+  <p><a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">官方文件：Connect Claude Code to tools via MCP ↗</a></p>
+
+  <h4>硬性防線：三層把關</h4>
+  <div class="tbl"><table>
+    <thead><tr><th>機制</th><th>說明</th></tr></thead>
+    <tbody>
+      <tr><td class="k">permissions</td><td>settings.json 的 allow／ask／deny，比對順序 <strong>deny → ask → allow</strong>，deny 一定優先</td></tr>
+      <tr><td class="k">Hooks</td><td>特定時機自動執行的程式；PreToolUse 在工具執行前觸發，<strong>exit 2</strong> 就阻擋</td></tr>
+      <tr><td class="k">分支保護</td><td>GitHub 伺服器端：main 必須經 PR、CI 通過才能合併</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout warn"><span class="tag">exit code</span><strong>2 = 阻擋</strong>；0 = 放行；1 或其他值 = 非阻擋錯誤，工具<strong>照常執行</strong>。用 exit 1 擋不住。　<a href="https://code.claude.com/docs/en/hooks" target="_blank" rel="noopener">Hooks reference ↗</a></div>
+<figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 950 262" role="img" aria-label="Claude 要執行 Bash 指令時，先經過 PreToolUse Hook，再依 deny、ask、allow 順序比對規則，最後才執行" style="min-width:640px"><defs><marker id="f9-mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-n" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f9-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-a" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f9-mbad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-bad" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f9-mok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-ok" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f9-mwarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-warn" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="bx" x="20" y="50" width="180" height="60" rx="8"/>
+<text class="t tb" x="110.0" y="75.5" text-anchor="middle">Claude 要執行</text>
+<text class="mono" x="110.0" y="93.5" text-anchor="middle">git push origin main</text>
+<rect class="bx-w" x="230" y="50" width="140" height="60" rx="8"/>
+<text class="t tb" x="300.0" y="75.5" text-anchor="middle">PreToolUse</text>
+<text class="t tb" x="300.0" y="93.5" text-anchor="middle">Hook</text>
+<rect class="bx-w" x="410" y="50" width="110" height="60" rx="8"/>
+<text class="mono tink" x="465.0" y="75.5" text-anchor="middle">deny</text>
+<text class="ts" x="465.0" y="93.5" text-anchor="middle">符合？</text>
+<rect class="bx-w" x="560" y="50" width="110" height="60" rx="8"/>
+<text class="mono tink" x="615.0" y="75.5" text-anchor="middle">ask</text>
+<text class="ts" x="615.0" y="93.5" text-anchor="middle">符合？</text>
+<rect class="bx-w" x="710" y="50" width="110" height="60" rx="8"/>
+<text class="mono tink" x="765.0" y="75.5" text-anchor="middle">allow</text>
+<text class="ts" x="765.0" y="93.5" text-anchor="middle">符合？</text>
+<rect class="bx-ok" x="860" y="50" width="76" height="60" rx="8"/>
+<text class="t tb" x="898.0" y="84.5" text-anchor="middle">執行</text>
+<polyline class="ln" points="200,80 228,80" marker-end="url(#f9-mn)"/>
+<polyline class="ln" points="370,80 408,80" marker-end="url(#f9-mn)"/>
+<text class="ts" x="389" y="72" text-anchor="middle">放行</text>
+<polyline class="ln" points="520,80 558,80" marker-end="url(#f9-mn)"/>
+<text class="ts" x="539" y="72" text-anchor="middle">否</text>
+<polyline class="ln" points="670,80 708,80" marker-end="url(#f9-mn)"/>
+<text class="ts" x="689" y="72" text-anchor="middle">否</text>
+<polyline class="ln ln-ok" points="820,80 858,80" marker-end="url(#f9-mok)"/>
+<text class="ts tok" x="839" y="72" text-anchor="middle">是</text>
+<polyline class="ln ln-bad" points="300,110 300,166" marker-end="url(#f9-mbad)"/>
+<text class="mono tbad" x="308" y="142" text-anchor="start">exit 2</text>
+<rect class="bx-bad" x="225" y="168" width="150" height="48" rx="8"/>
+<text class="t tb tbad" x="300.0" y="187.5" text-anchor="middle">阻擋</text>
+<text class="ts" x="300.0" y="205.5" text-anchor="middle">stderr 回傳給 Claude</text>
+<polyline class="ln ln-bad" points="465,110 465,166" marker-end="url(#f9-mbad)"/>
+<text class="ts tbad" x="473" y="142" text-anchor="start">是</text>
+<rect class="bx-bad" x="405" y="168" width="120" height="48" rx="8"/>
+<text class="t tb tbad" x="465.0" y="187.5" text-anchor="middle">阻擋</text>
+<text class="ts" x="465.0" y="205.5" text-anchor="middle">不會詢問</text>
+<polyline class="ln ln-warn" points="615,110 615,166" marker-end="url(#f9-mwarn)"/>
+<text class="ts tw" x="623" y="142" text-anchor="start">是</text>
+<rect class="bx-w" x="550" y="168" width="130" height="48" rx="8"/>
+<text class="t tb tw" x="615.0" y="187.5" text-anchor="middle">詢問你</text>
+<text class="ts" x="615.0" y="205.5" text-anchor="middle">每次確認</text>
+<polyline class="ln ln-warn" points="765,110 765,166" marker-end="url(#f9-mwarn)"/>
+<text class="ts tw" x="773" y="142" text-anchor="start">否</text>
+<rect class="bx-w" x="690" y="168" width="150" height="48" rx="8"/>
+<text class="t tb tw" x="765.0" y="187.5" text-anchor="middle">依權限模式</text>
+<text class="ts" x="765.0" y="205.5" text-anchor="middle">Manual 問你／auto 審查</text>
+<text class="ts" x="20" y="248" text-anchor="start">例：本課設定中，git push origin main 符合 deny 的 Bash(git push * main)，在第二關就被擋下。</text>
+</svg></div><figcaption><b>流程圖｜一個 Bash 指令被執行前的判斷順序。</b>實測 Hook 會先執行；Hook 回傳 allow 也無法推翻 deny。規則中 deny 最先比對，較具體的 allow 也不能在 deny 裡開例外。</figcaption></figure>
+
+  <h3>舊版做法的風險</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>舊版</th><th>風險</th><th>改為</th></tr></thead>
+    <tbody>
+      <tr><td class="k"><code>git add .</code></td><td>.env、金鑰一起提交</td><td>逐一指定檔案</td></tr>
+      <tr><td class="k"><code>git push origin main</code></td><td>跳過審查</td><td>feature 分支＋PR</td></tr>
+      <tr><td class="k"><code>credential.helper store</code></td><td>Token 明文存檔</td><td><code>gh auth setup-git</code></td></tr>
+      <tr><td class="k"><code>ssh-keygen -t rsa … -N ""</code></td><td>金鑰無密碼</td><td>ed25519＋passphrase</td></tr>
+      <tr><td class="k"><code>allowed-tools: Bash</code></td><td>整個 Bash 免詢問</td><td>只授權特定指令</td></tr>
+      <tr><td class="k"><code>gh pr merge --auto</code></td><td>AI 程式未審即合併</td><td>人工審查後合併</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>實作步驟</h3>
+  <h4>步驟 1：安裝並登入 GitHub CLI</h4>
+  <div class="code"><div class="cap"><span>終端機</span><button type="button" data-copy>複製</button></div><pre>winget install --id GitHub.cli   <span class="c"># Windows；macOS 用 brew install gh</span>
+gh auth login                     <span class="c"># GitHub.com → HTTPS → 瀏覽器登入</span>
+gh auth setup-git                 <span class="c"># git 透過 gh 取得憑證，不明文存 Token</span>
+gh auth status</pre></div>
+  <p>預設權限已足夠建立 PR；要改 <code>.github/workflows/</code> 時再執行 <code>gh auth refresh -s workflow</code>。<a href="https://cli.github.com" target="_blank" rel="noopener">GitHub CLI ↗</a></p>
+
+  <h4>步驟 2（選用）：SSH 改用 Ed25519</h4>
+  <div class="code"><div class="cap"><span>終端機</span><button type="button" data-copy>複製</button></div><pre>ssh-keygen -t ed25519 -C "your_email@example.com"   <span class="c"># 設定 passphrase</span>
+ssh-add ~/.ssh/id_ed25519
+gh ssh-key add ~/.ssh/id_ed25519.pub --title "公司筆電"
+ssh -T git@github.com
+git ls-remote origin    <span class="c"># 測試連線，不需重新 clone</span></pre></div>
+  <p><a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent" target="_blank" rel="noopener">GitHub Docs：產生 SSH 金鑰 ↗</a></p>
+
+  <h4>步驟 3：GitHub 設定 main 分支保護</h4>
+  <ul class="plain">
+    <li>合併前必須透過 Pull Request，且必須通過 CI（例如 npm test）</li>
+    <li>視需要：至少 1 位審查者核准；禁止 force push</li>
+    <li>要用自動合併，還要在 Settings → General 勾選 Allow auto-merge；它只在上述條件尚未滿足時才可啟用。<a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-auto-merge-for-pull-requests-in-your-repository" target="_blank" rel="noopener">GitHub Docs：auto-merge ↗</a></li>
+  </ul>
+
+  <h4>步驟 4：設定 permissions</h4>
+  <div class="code"><div class="cap"><span>.claude/settings.json</span><button type="button" data-copy>複製</button></div><pre>{
+  "permissions": {
+    "allow": [
+      "Bash(npm test)", "Bash(npm test *)",
+      "Bash(git status *)", "Bash(git diff *)", "Bash(git log *)"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "Bash(gh pr create *)"
+    ],
+    "deny": [
+      "Read(./.env)", "Read(./.env.*)",
+      "Bash(rm -rf *)",
+      "Bash(git add .)", "Bash(git add -A)",
+      "Bash(git push --force *)", "Bash(git push * main)",
+      "Bash(gh pr merge *)"
+    ]
+  }
+}</pre></div>
+  <div class="callout info"><span class="tag">多層防護</span>Bash 規則以字串比對，寫法不同（如 <code>git push origin HEAD:main</code>）可能比對不到，所以還要搭配 Hook 與分支保護。<a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Configure permissions ↗</a></div>
+<figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 900 290" role="img" aria-label="三種推送到 main 的方式，分別被 permissions、Hook、GitHub 分支保護擋下" style="min-width:640px"><defs><marker id="f10-mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-n" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f10-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-a" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f10-mbad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-bad" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f10-mok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-ok" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f10-mwarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-warn" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="wall" x="330" y="56" width="24" height="214" rx="4"/>
+<text class="t tb tw" x="342" y="42" text-anchor="middle">① permissions deny</text>
+<rect class="wall" x="520" y="56" width="24" height="214" rx="4"/>
+<text class="t tb tw" x="532" y="42" text-anchor="middle">② PreToolUse Hook</text>
+<rect class="wall" x="710" y="56" width="24" height="214" rx="4"/>
+<text class="t tb tw" x="722" y="42" text-anchor="middle">③ GitHub 分支保護</text>
+<rect class="bx-ok" x="772" y="132" width="110" height="60" rx="8"/>
+<text class="t tb" x="827.0" y="157.5" text-anchor="middle">main</text>
+<text class="ts" x="827.0" y="175.5" text-anchor="middle">保持乾淨</text>
+<rect class="bx" x="20" y="83" width="262" height="34" rx="6"/>
+<text class="mono tink" x="151.0" y="104.5" text-anchor="middle">Claude：git push origin main</text>
+<rect class="bx" x="20" y="153" width="262" height="34" rx="6"/>
+<text class="mono tink" x="151.0" y="174.5" text-anchor="middle">Claude：git push origin HEAD:main</text>
+<rect class="bx" x="20" y="223" width="262" height="34" rx="6"/>
+<text class="mono tink" x="151.0" y="244.5" text-anchor="middle">有人在終端機手動 push main</text>
+<polyline class="ln ln-bad" points="282,100 326,100" marker-end="url(#f10-mbad)"/>
+<text class="ts tbad" x="362" y="105" text-anchor="start">✗ 擋下：字串符合 deny</text>
+<polyline class="ln ln-bad" points="282,170 516,170" marker-end="url(#f10-mbad)"/>
+<text class="ts" x="424" y="162" text-anchor="middle">寫法不同，比對不到</text>
+<text class="ts tbad" x="552" y="175" text-anchor="start">✗ 擋下：Hook exit 2</text>
+<polyline class="ln ln-bad" points="282,240 706,240" marker-end="url(#f10-mbad)"/>
+<text class="ts" x="437" y="232" text-anchor="middle">不經過 Claude，①② 管不到</text>
+<text class="ts tbad" x="742" y="245" text-anchor="start">✗ 伺服器拒絕</text>
+</svg></div><figcaption><b>觀念圖｜縱深防禦：為什麼要三層。</b>字串規則可能被不同寫法繞過，Hook 只管得到 Claude，人在終端機手動推送時只剩伺服器端的分支保護。</figcaption></figure>
+
+  <h4>步驟 5：PreToolUse Hook：推送前檢查</h4>
+  <div class="code"><div class="cap"><span>.claude/hooks/guard-git.js</span><button type="button" data-copy>複製</button></div><pre>const { execSync } = require('child_process');
+
+let raw = '';
+process.stdin.on('data', (c) =&gt; (raw += c));
+process.stdin.on('end', () =&gt; {
+  const input = JSON.parse(raw);
+  const cmd = (input.tool_input &amp;&amp; input.tool_input.command) || '';
+  const isPush = /\bgit\s+push\b/.test(cmd);
+  const isCreatePr = /\bgh\s+pr\s+create\b/.test(cmd);
+  if (!isPush &amp;&amp; !isCreatePr) process.exit(0);   <span class="c">// 其他指令放行</span>
+
+  const branch = execSync('git branch --show-current').toString().trim();
+  if (isPush &amp;&amp; (branch === 'main' || /[\s:]main(\s|$)/.test(cmd))) {
+    console.error('禁止推送到 main，請改用 feature 分支並建立 PR。');
+    process.exit(2);                               <span class="c">// 2 = 阻擋</span>
+  }
+  try {
+    execSync('npm test', { stdio: 'pipe' });
+  } catch {
+    console.error('npm test 未通過，已阻擋。請先修正測試。');
+    process.exit(2);
+  }
+  process.exit(0);
+});</pre></div>
+  <div class="code"><div class="cap"><span>.claude/settings.json（與 permissions 並列）</span><button type="button" data-copy>複製</button></div><pre>{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard-git.js\"",
+            "timeout": 300
+          }
+        ]
+      }
+    ]
+  }
+}</pre></div>
+  <ul class="plain">
+    <li>Hook 從 stdin 收到 JSON，指令在 <code>tool_input.command</code>；stderr 訊息會回傳給 Claude。</li>
+    <li>另一種寫法：exit 0 並輸出 JSON 的 <code>permissionDecision: "deny"</code>。</li>
+    <li>Hook 回傳 allow 也推翻不了 deny 規則。用 <code>/hooks</code> 檢查是否載入。</li>
+    <li><strong>Windows：</strong>有安裝 Git Bash 時，Hook 預設以 bash 執行，上面的寫法可直接使用；沒有 Git Bash 時會改用 PowerShell，建議改成 <code>"command": "node", "args": ["${CLAUDE_PROJECT_DIR}/.claude/hooks/guard-git.js"]</code> 的寫法。</li>
+    <li>Hook 以你的帳號權限執行，加入前要檢查內容。<a href="https://code.claude.com/docs/en/hooks-guide" target="_blank" rel="noopener">Hooks guide ↗</a></li>
+  </ul>
+
+  <h4>步驟 6：/ship 流程型 Skill</h4>
+<figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 880 214" role="img" aria-label="feature 分支上 commit、push、建立 PR，通過 CI 與人工審查後才合併回 main；直推 main 被禁止" style="min-width:640px"><defs><marker id="f11-mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-n" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f11-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-a" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f11-mbad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-bad" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f11-mok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-ok" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f11-mwarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-warn" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<line class="branch-main" x1="30" y1="60" x2="860" y2="60"/>
+<text class="mono tink" x="30" y="46" text-anchor="start">main</text>
+<path class="branch-feat" d="M60,60 C90,60 110,150 150,150 L770,150 C800,150 800,60 830,60"/>
+<circle class="dot" cx="60" cy="60" r="6"/><circle class="dot-ok" cx="830" cy="60" r="7"/>
+<circle class="dot" cx="220" cy="150" r="6"/>
+<circle class="dot" cx="290" cy="150" r="6"/>
+<rect class="bx-a" x="380" y="130" width="110" height="40" rx="8"/>
+<text class="t tb" x="435.0" y="154.5" text-anchor="middle">④ 建立 PR</text>
+<rect class="bx-ok" x="530" y="130" width="100" height="40" rx="8"/>
+<text class="t tb" x="580.0" y="154.5" text-anchor="middle">CI 通過</text>
+<rect class="bx-ok" x="660" y="130" width="100" height="40" rx="8"/>
+<text class="t tb" x="710.0" y="154.5" text-anchor="middle">人工審查</text>
+<text class="ts tink" x="140" y="186" text-anchor="middle">① 建分支</text>
+<text class="ts tink" x="240" y="186" text-anchor="middle">② commit（指定檔案）</text>
+<text class="ts tink" x="345" y="186" text-anchor="middle">③ push</text>
+<text class="ts tok" x="830" y="40" text-anchor="middle">⑤ 合併（由人決定）</text>
+<text class="mono" x="150" y="206" text-anchor="middle">feature/employee-api</text>
+<polyline class="ln ln-bad" points="300,140 372,66" stroke-dasharray="5 4" marker-end="url(#f11-mbad)"/>
+<text class="ts tbad" x="392" y="104" text-anchor="start">✗ 直推 main</text>
+</svg></div><figcaption><b>流程圖｜/ship 的分支流程。</b>Claude 負責到「建立 PR」為止；CI 與審查通過後，由人決定合併。</figcaption></figure>
+  <div class="code"><div class="cap"><span>.claude/skills/ship/SKILL.md</span><button type="button" data-copy>複製</button></div><pre>---
+description: 測試通過後，建立分支、commit、push，並建立 Pull Request
+argument-hint: &lt;分支名稱&gt; &lt;PR 標題&gt;
+arguments: [branch, title]
+disable-model-invocation: true
+allowed-tools:
+  - Bash(git switch *)
+  - Bash(git add *)
+  - Bash(git commit *)
+---
+
+# 送出變更：$title
+
+- 分支：!`git branch --show-current`
+- 變更：!`git status --short`
+
+1. 執行 npm test，未通過就停止並回報。
+2. 檢查 git diff，確認沒有 .env、金鑰、node_modules、建置產物。
+3. 若目前在 main，執行 git switch -c feature/$branch。
+4. 逐一 git add 本次相關檔案，不要用 git add . 或 -A。
+5. 以 Conventional Commits 格式 commit（例：feat: add POST /api/employees）。
+6. git push -u origin 目前分支
+7. gh pr create --base main --title "$title"，內文含變更摘要與測試結果。
+8. 回報 PR 網址，不要合併。</pre></div>
+  <div class="code"><div class="cap"><span>在 Claude Code 中輸入</span><button type="button" data-copy>複製</button></div><pre>/ship employee-api "新增員工管理 API"</pre></div>
+  <p>allowed-tools 故意不含 push 與 PR：這兩步走 settings.json 的 ask，每次由人確認。commit 訊息格式參考 <a href="https://www.conventionalcommits.org/" target="_blank" rel="noopener">Conventional Commits ↗</a>。</p>
+
+  <h4>步驟 7（選用）：GitHub 官方 MCP</h4>
+  <div class="code"><div class="cap"><span>.mcp.json</span><button type="button" data-copy>複製</button></div><pre>{
+  "mcpServers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp",
+      "headers": { "Authorization": "Bearer ${GITHUB_PAT}" }
+    }
+  }
+}</pre></div>
+  <ul class="plain">
+    <li>Token 用環境變數 <code>GITHUB_PAT</code> 提供，不要寫進檔案。</li>
+    <li>使用 fine-grained PAT：限定儲存庫、最小權限、設定到期日。</li>
+    <li>第一次開啟專案會詢問是否核准 <code>.mcp.json</code> 的伺服器。<a href="https://github.com/github/github-mcp-server/blob/main/docs/installation-guides/install-claude.md" target="_blank" rel="noopener">GitHub MCP 安裝指南 ↗</a></li>
+  </ul>
+
+  <h4>步驟 8（選用）：Claude Code GitHub Actions</h4>
+  <ol class="steps">
+    <li>在專案中輸入 <code>/install-github-app</code>（需儲存庫管理員權限、已登入 gh）。</li>
+    <li>依提示安裝 Claude GitHub App、設定金鑰 secret，合併它建立的 workflow PR。</li>
+    <li>在 PR 或 Issue 留言 <code>@claude 請檢查這支 API 是否符合 api-standards</code>。</li>
+  </ol>
+  <p>Actions 中的 Claude 同樣會讀專案的 CLAUDE.md 與 <code>.claude/skills/</code>。<a href="https://code.claude.com/docs/en/github-actions" target="_blank" rel="noopener">Claude Code GitHub Actions ↗</a></p>
+
+  <h3>常見錯誤</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>症狀</th><th>處理</th></tr></thead>
+    <tbody>
+      <tr><td class="k">could not read Username</td><td><code>gh auth login</code> 與 <code>gh auth setup-git</code></td></tr>
+      <tr><td class="k">Permission denied (publickey)</td><td><code>ssh-add -l</code> 確認金鑰已載入</td></tr>
+      <tr><td class="k">HTTP 403 push access</td><td>確認有寫入權限、PAT 包含該儲存庫</td></tr>
+      <tr><td class="k">Hook 沒擋下</td><td>確認 exit 2；<code>/hooks</code> 檢查；matcher 是否為 Bash</td></tr>
+      <tr><td class="k">--auto 無效</td><td>需開啟 Allow auto-merge，且有尚未滿足的必要檢查</td></tr>
+      <tr><td class="k">指令從文件複製後失敗</td><td><code>--</code> 被轉成長破折號、引號變彎引號，改回半形</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>自我測驗</h3>
+  <div class="quiz" data-quiz="l4"></div>
+
+  <h3>情境問答</h3>
+  <details class="qa"><summary>Hook 寫好了，Claude 還是照樣 push 到 main？</summary><div class="a">
+    <ul>
+      <li>檢查程式是否用 <code>exit 2</code>（exit 1 不會擋）。</li>
+      <li>用 <code>/hooks</code> 確認 Hook 有載入，matcher 是 <code>Bash</code>。</li>
+      <li>確認 Hook 讀的是 stdin JSON 的 <code>tool_input.command</code>。</li>
+      <li>最後防線：GitHub 分支保護，伺服器端直接拒絕。</li>
+    </ul></div></details>
+  <details class="qa"><summary>deny 已經寫了 git push * main，為什麼還不夠？</summary><div class="a">
+    <p>規則是字串比對，<code>git push origin HEAD:main</code>、先 <code>cd</code> 再推等寫法可能比對不到。所以要 permissions、Hook、分支保護三層一起用，任何一層漏掉還有下一層。</p></div></details>
+  <details class="qa"><summary>想讓同事在 PR 留言就請 Claude 修改，怎麼做？</summary><div class="a">
+    <p>在專案執行 <code>/install-github-app</code> 完成設定後，在 PR 或 Issue 留言 <code>@claude</code> 加上需求即可。留言者需對儲存庫有寫入權限。</p></div></details>
+  <details class="qa"><summary>MCP 的 Token 可以直接寫在 .mcp.json 裡嗎？</summary><div class="a">
+    <p>不建議。<code>.mcp.json</code> 會提交到 git，Token 會外洩。用 <code>${GITHUB_PAT}</code> 環境變數，並使用有到期日、只限特定儲存庫的 fine-grained PAT。</p></div></details>
+
+  <h3>延伸閱讀</h3>
+  <ul class="refs">
+    <li><a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Configure permissions</a><span>規則語法、比對順序、sandbox</span></li>
+    <li><a href="https://code.claude.com/docs/en/hooks" target="_blank" rel="noopener">Hooks reference</a><span>事件清單、exit code、JSON 輸出</span></li>
+    <li><a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a><span>傳輸、範圍、OAuth</span></li>
+    <li><a href="https://code.claude.com/docs/en/github-actions" target="_blank" rel="noopener">Claude Code GitHub Actions</a><span>@claude、/install-github-app</span></li>
+    <li><a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent" target="_blank" rel="noopener">GitHub Docs：SSH 金鑰</a><span>Ed25519 與 passphrase</span></li>
+  </ul>
+
+  <h3>本堂總結</h3>
+  <div class="twocol">
+    <div class="panel"><h5>白話版</h5><ul>
+      <li>讓 Claude 幫忙推程式很方便，但要先裝好「門禁」。</li>
+      <li>門禁有三道：禁止清單（permissions）、檢查員（Hook）、GitHub 的關卡（分支保護）。</li>
+      <li>檢查員要回「2」才算擋下，回「1」會被放行。</li>
+      <li>程式只推到分支、開 PR，合併前一定有人看過。</li>
+    </ul></div>
+    <div class="panel pro"><h5>專業版</h5><ul>
+      <li>以 gh 完成 GitHub 認證（<code>gh auth setup-git</code>），避免明文憑證；SSH 採 Ed25519 並啟用 passphrase。</li>
+      <li>permissions 依 deny → ask → allow 評估，deny 不可被 allow 或 Hook 覆寫；字串比對需以縱深防禦補強。</li>
+      <li>PreToolUse Hook 以 exit 2 或 <code>permissionDecision: "deny"</code> 阻擋；伺服器端以 branch protection／required checks 收斂。</li>
+      <li>擴充：遠端 GitHub MCP（HTTP、環境變數注入 fine-grained PAT）、claude-code-action（@claude）、Plugin 分發。</li>
+    </ul></div>
+  </div>
+  <div class="pager"><button type="button" data-go="l3">← 第 3 堂</button><button type="button" data-go="ext">補充觀念 →</button></div>
+</section>
+
+
+<!-- ================= 補充觀念 ================= -->
+<section class="page" id="ext" role="tabpanel" aria-labelledby="tab-ext" hidden>
+  <div class="page-head">
+    <div class="eyebrow">補充觀念</div>
+    <h2>用得穩、用得安全的六個觀念</h2>
+    <p class="lead">四堂課建好了架構；這一頁補上日常操作時最常影響結果的機制：權限模式、先規劃、回溯、自我驗證、安全與自動化。</p>
+    <div class="remember"><b>一句話記住</b><span>先知道 Claude 現在「能不問就做什麼」，再給它可以自己檢查對錯的方法。</span></div>
+  </div>
+
+  <h3>1. 權限模式：Claude 什麼事不用問你</h3>
+  <p>權限模式決定 Claude 哪些動作可以直接做。第 4 堂的 permissions 規則是疊加在模式之上的細部設定。</p>
+  <figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 880 250" role="img" aria-label="六種權限模式由左到右放行越多；deny 規則在所有模式都有效" style="min-width:640px"><defs><marker id="f13-mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-n" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f13-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-a" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f13-mbad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-bad" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f13-mok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-ok" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f13-mwarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-warn" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<polyline class="ln" points="20,30 860,30" marker-end="url(#f13-mn)"/>
+<text class="ts" x="20" y="22" text-anchor="start">你親自審查越多</text>
+<text class="ts" x="860" y="22" text-anchor="end">自動放行越多</text>
+<rect class="bx" x="20" y="50" width="130" height="96" rx="8"/>
+<text class="mono tink tb" x="85.0" y="84.5" text-anchor="middle">plan</text>
+<text class="ts tink" x="85.0" y="102.5" text-anchor="middle">唯讀＋提出計畫</text>
+<text class="ts" x="85.0" y="120.5" text-anchor="middle">不改原始碼</text>
+<rect class="bx" x="162" y="50" width="130" height="96" rx="8"/>
+<text class="mono tink tb" x="227.0" y="84.5" text-anchor="middle">Manual (default)</text>
+<text class="ts tink" x="227.0" y="102.5" text-anchor="middle">只有讀取免問</text>
+<text class="ts" x="227.0" y="120.5" text-anchor="middle">其餘都問你</text>
+<rect class="bx" x="304" y="50" width="130" height="96" rx="8"/>
+<text class="mono tink tb" x="369.0" y="84.5" text-anchor="middle">acceptEdits</text>
+<text class="ts tink" x="369.0" y="102.5" text-anchor="middle">編輯檔案免問</text>
+<text class="ts" x="369.0" y="120.5" text-anchor="middle">其他指令仍問</text>
+<rect class="bx-a" x="446" y="50" width="130" height="96" rx="8"/>
+<text class="mono tink tb" x="511.0" y="84.5" text-anchor="middle">auto</text>
+<text class="ts tink" x="511.0" y="102.5" text-anchor="middle">分類器代你審查</text>
+<text class="ts" x="511.0" y="120.5" text-anchor="middle">Pro/Max/Team 預設</text>
+<rect class="bx-s" x="588" y="50" width="130" height="96" rx="8"/>
+<text class="mono tink tb" x="653.0" y="84.5" text-anchor="middle">dontAsk</text>
+<text class="ts tink" x="653.0" y="102.5" text-anchor="middle">只准預先允許的</text>
+<text class="ts" x="653.0" y="120.5" text-anchor="middle">其餘直接拒絕（CI）</text>
+<rect class="bx-bad" x="730" y="50" width="130" height="96" rx="8"/>
+<text class="mono tink tb" x="795.0" y="84.5" text-anchor="middle">bypassPermissions</text>
+<text class="ts tink" x="795.0" y="102.5" text-anchor="middle">全部放行</text>
+<text class="ts" x="795.0" y="120.5" text-anchor="middle">僅限隔離環境</text>
+<rect class="bx-w" x="20" y="170" width="840" height="38" rx="8"/>
+<text class="t tb tw" x="440.0" y="193.5" text-anchor="middle">permissions 的 deny 規則在所有模式都有效，包含 bypassPermissions</text>
+<text class="ts" x="440" y="236" text-anchor="middle">互動中按 Shift+Tab 切換：auto → Manual → acceptEdits → plan → …</text>
+</svg></div><figcaption><b>觀念圖｜六種權限模式。</b>Pro、Max、Team 方案的預設起始模式是 auto；Enterprise 與 API 金鑰是 Manual。互動中按 Shift+Tab 切換，dontAsk 只能用 --permission-mode 指定。</figcaption></figure>
+  <div class="tbl"><table>
+    <thead><tr><th>模式</th><th>不用問你就能做</th><th>適合</th></tr></thead>
+    <tbody>
+      <tr><td class="k"><code>plan</code></td><td>讀取、探索；提出計畫，不改原始碼</td><td>先了解程式再動手</td></tr>
+      <tr><td class="k">Manual（<code>default</code>）</td><td>只有讀取</td><td>敏感工作、想逐一審查</td></tr>
+      <tr><td class="k"><code>acceptEdits</code></td><td>讀取、編輯檔案、常見檔案指令（mkdir、mv、cp 等）</td><td>一邊看一邊改</td></tr>
+      <tr><td class="k"><code>auto</code></td><td>大部分動作，由另一個分類器模型在背景審查</td><td>長任務、減少一直按確認</td></tr>
+      <tr><td class="k"><code>dontAsk</code></td><td>只有預先允許的工具，其餘直接拒絕</td><td>CI、腳本</td></tr>
+      <tr><td class="k"><code>bypassPermissions</code></td><td>全部</td><td>只限隔離的容器或 VM</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout warn"><span class="tag">常見誤解</span>「Claude 每個指令都會先問我」不一定成立：<strong>Pro、Max、Team 方案的預設起始模式是 auto</strong>，由分類器審查，不是每次都問你；Enterprise 方案與 API 金鑰才是 Manual。組織管理員可用 managed settings 的 <code>disableAutoMode</code> 關閉 auto。</div>
+  <ul class="plain">
+    <li>互動中按 <kbd>Shift+Tab</kbd> 切換；啟動時可用 <code>claude --permission-mode plan</code> 指定。</li>
+    <li><strong>deny 規則在所有模式都有效</strong>，包括 bypassPermissions；這也是第 4 堂先設 deny 的原因。</li>
+    <li>以 root 身分或在個人電腦上不要用 bypassPermissions，它只適合用完即丟的隔離環境。</li>
+  </ul>
+  <p><a href="https://code.claude.com/docs/en/permission-modes" target="_blank" rel="noopener">官方文件：Choose a permission mode ↗</a></p>
+
+  <h3>2. Plan mode：先規劃再動手</h3>
+  <figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 880 190" role="img" aria-label="探索、規劃、實作、提交四個階段；前兩階段在 plan mode 不改檔案" style="min-width:640px"><defs><marker id="f14-mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-n" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f14-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-a" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f14-mbad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-bad" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f14-mok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-ok" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f14-mwarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-warn" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="ts ta" x="240" y="26" text-anchor="middle">plan mode：不改檔案</text>
+<text class="ts tw" x="680" y="26" text-anchor="middle">離開 plan mode：開始修改</text>
+<rect class="bx-a" x="20" y="40" width="190" height="64" rx="8"/>
+<text class="t tb" x="115.0" y="67.5" text-anchor="middle">① 探索</text>
+<text class="ts tink" x="115.0" y="85.5" text-anchor="middle">讀程式、回答問題</text>
+<polyline class="ln" points="210,72 238,72" marker-end="url(#f14-mn)"/>
+<rect class="bx-a" x="240" y="40" width="190" height="64" rx="8"/>
+<text class="t tb" x="335.0" y="67.5" text-anchor="middle">② 規劃</text>
+<text class="ts tink" x="335.0" y="85.5" text-anchor="middle">Ctrl+G 可編輯計畫</text>
+<polyline class="ln" points="430,72 458,72" marker-end="url(#f14-mn)"/>
+<rect class="bx-w" x="460" y="40" width="190" height="64" rx="8"/>
+<text class="t tb" x="555.0" y="67.5" text-anchor="middle">③ 實作</text>
+<text class="ts tink" x="555.0" y="85.5" text-anchor="middle">依計畫修改＋跑測試</text>
+<polyline class="ln" points="650,72 678,72" marker-end="url(#f14-mn)"/>
+<rect class="bx-w" x="680" y="40" width="190" height="64" rx="8"/>
+<text class="t tb" x="775.0" y="67.5" text-anchor="middle">④ 提交</text>
+<text class="ts tink" x="775.0" y="85.5" text-anchor="middle">commit／建立 PR</text>
+<polyline class="ln ln-bad" points="555,104 555,140 335,140 335,106" marker-end="url(#f14-mbad)"/>
+<text class="ts tbad" x="445" y="160" text-anchor="middle">方向不對 → 回到規劃</text>
+</svg></div><figcaption><b>流程圖｜先規劃再動手。</b>範圍不確定、會改多個檔案、或不熟悉的程式碼時使用；一句話就能描述的小修改可以直接做。</figcaption></figure>
+  <div class="code"><div class="cap"><span>在 plan mode 中輸入（範例）</span><button type="button" data-copy>複製</button></div><pre>讀 src/ 了解員工 API 的分層與錯誤處理方式。
+我想加上「依部門查詢員工」，要改哪些檔案？請列出計畫與要補的測試。</pre></div>
+  <ul class="plain">
+    <li>進入方式：按 <kbd>Shift+Tab</kbd> 直到狀態列顯示 plan mode，或在提示前加 <code>/plan</code>。</li>
+    <li>計畫出來後可按 <kbd>Ctrl+G</kbd> 在編輯器中直接修改，再核准。</li>
+    <li>大型功能可先請 Claude「訪談你」並寫出 SPEC.md，再開新對話依規格實作。</li>
+  </ul>
+
+  <h3>3. /rewind：改壞了可以回到先前</h3>
+  <p>每送出一則提示，Claude Code 就建立一個檢查點。按兩下 <kbd>Esc</kbd>（輸入框為空時）或輸入 <code>/rewind</code>，可以選擇：</p>
+  <div class="tbl"><table>
+    <tbody>
+      <tr><td class="k">Restore code and conversation</td><td>程式與對話都回到那個時間點</td></tr>
+      <tr><td class="k">Restore conversation</td><td>只回溯對話，保留目前程式</td></tr>
+      <tr><td class="k">Restore code</td><td>只還原檔案，保留對話</td></tr>
+      <tr><td class="k">Summarize from here／up to here</td><td>把某段對話壓縮成摘要，騰出上下文</td></tr>
+    </tbody>
+  </table></div>
+  <figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 880 250" role="img" aria-label="回溯只能還原編輯工具的修改；Bash 指令與已推送到遠端的變更不會還原" style="min-width:640px"><defs><marker id="f15-mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-n" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f15-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-a" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f15-mbad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-bad" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f15-mok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-ok" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f15-mwarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-warn" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<polyline class="ln" points="40,60 840,60"/>
+<circle class="dot" cx="80" cy="60" r="7"/>
+<text class="ts tink" x="80" y="88" text-anchor="middle">提示 1</text>
+<circle class="dot" cx="300" cy="60" r="7"/>
+<text class="ts tink" x="300" y="88" text-anchor="middle">提示 2</text>
+<circle class="dot" cx="520" cy="60" r="7"/>
+<text class="ts tink" x="520" y="88" text-anchor="middle">提示 3</text>
+<circle class="dot" cx="740" cy="60" r="7"/>
+<text class="ts tink" x="740" y="88" text-anchor="middle">提示 4</text>
+<polyline class="ln ln-a" points="740,50 740,26 84,26 84,50" marker-end="url(#f15-ma)"/>
+<text class="ts ta" x="412" y="20" text-anchor="middle">/rewind 或 Esc Esc：回到提示 1</text>
+<rect class="bx-ok" x="95" y="104" width="190" height="56" rx="8"/>
+<text class="t" x="190.0" y="127.5" text-anchor="middle">用編輯工具修改</text>
+<text class="mono" x="190.0" y="145.5" text-anchor="middle">service.js</text>
+<text class="ts tok" x="190" y="184" text-anchor="middle">✓ 會還原</text>
+<rect class="bx-bad" x="315" y="104" width="190" height="56" rx="8"/>
+<text class="t" x="410.0" y="127.5" text-anchor="middle">用 Bash 執行</text>
+<text class="mono" x="410.0" y="145.5" text-anchor="middle">rm tmp.txt</text>
+<text class="ts tbad" x="410" y="184" text-anchor="middle">✗ 不會還原</text>
+<rect class="bx-bad" x="535" y="104" width="190" height="56" rx="8"/>
+<text class="t" x="630.0" y="127.5" text-anchor="middle">執行 git push</text>
+<text class="mono" x="630.0" y="145.5" text-anchor="middle">已送到遠端</text>
+<text class="ts tbad" x="630" y="184" text-anchor="middle">✗ 收不回來</text>
+<text class="ts" x="440" y="226" text-anchor="middle">重要進度先 git commit：檢查點只適合短時間復原，不取代版本控制</text>
+</svg></div><figcaption><b>觀念圖｜/rewind 能還原什麼。</b>每送出一則提示就建立一個檢查點。回溯只還原 Claude 用編輯工具改的檔案；Bash 指令改的檔案、已推送的 commit 都收不回來。</figcaption></figure>
+  <div class="callout warn"><span class="tag">限制</span>不會還原：Bash 指令改動的檔案、多數子代理的修改、你在 Claude Code 外手動改的檔案。檢查點不取代 git。<a href="https://code.claude.com/docs/en/checkpointing" target="_blank" rel="noopener">Checkpointing ↗</a></div>
+
+  <h3>4. 讓 Claude 能自己驗證</h3>
+  <p>官方最強調的一點：給 Claude 一個能產生「通過／失敗」的檢查。沒有檢查，Claude 只能憑感覺停下來，錯誤要等你發現。</p>
+  <figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 880 236" role="img" aria-label="實作後執行檢查、讀結果，失敗就修正後再檢查，通過才附證據回報" style="min-width:640px"><defs><marker id="f16-mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-n" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f16-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-a" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f16-mbad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-bad" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f16-mok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-ok" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f16-mwarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-warn" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="bx" x="20" y="82" width="150" height="56" rx="8"/>
+<text class="t tb" x="95.0" y="114.5" text-anchor="middle">實作</text>
+<rect class="bx-a" x="250" y="20" width="200" height="56" rx="8"/>
+<text class="t tb" x="350.0" y="43.5" text-anchor="middle">執行檢查</text>
+<text class="mono" x="350.0" y="61.5" text-anchor="middle">npm test／lint／build</text>
+<rect class="bx" x="530" y="82" width="150" height="56" rx="8"/>
+<text class="t tb" x="605.0" y="114.5" text-anchor="middle">讀結果</text>
+<rect class="bx-w" x="250" y="150" width="200" height="56" rx="8"/>
+<text class="t tb" x="350.0" y="173.5" text-anchor="middle">修正根本原因</text>
+<text class="ts" x="350.0" y="191.5" text-anchor="middle">不是把錯誤藏起來</text>
+<rect class="bx-ok" x="730" y="82" width="136" height="56" rx="8"/>
+<text class="t tb tok" x="798.0" y="105.5" text-anchor="middle">通過</text>
+<text class="ts" x="798.0" y="123.5" text-anchor="middle">附上證據回報</text>
+<polyline class="ln" points="95,82 95,48 248,48" marker-end="url(#f16-mn)"/>
+<polyline class="ln" points="450,48 605,48 605,80" marker-end="url(#f16-mn)"/>
+<polyline class="ln ln-bad" points="605,138 605,178 452,178" marker-end="url(#f16-mbad)"/>
+<text class="ts tbad" x="530" y="170" text-anchor="middle">失敗</text>
+<polyline class="ln" points="250,178 95,178 95,140" marker-end="url(#f16-mn)"/>
+<polyline class="ln ln-ok" points="680,110 728,110" marker-end="url(#f16-mok)"/>
+<text class="ts tok" x="704" y="102" text-anchor="middle">通過</text>
+</svg></div><figcaption><b>流程圖｜讓 Claude 自己驗證。</b>沒有可執行的檢查，Claude 只能憑「看起來完成了」停下來，你就成了那個驗證迴圈。</figcaption></figure>
+  <div class="tbl"><table>
+    <thead><tr><th>不好的提示</th><th>好的提示</th></tr></thead>
+    <tbody>
+      <tr><td class="x">實作 email 驗證</td><td>寫 validateEmail，測試案例：user@example.com 為 true、invalid 為 false。實作後跑測試。</td></tr>
+      <tr><td class="x">build 壞了</td><td>build 出現這個錯誤：[貼上]。修正根本原因，不要壓掉錯誤，並確認 build 成功。</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tbl"><table>
+    <thead><tr><th>把關強度</th><th>做法</th></tr></thead>
+    <tbody>
+      <tr><td class="k">單一提示</td><td>在同一則提示要求「跑檢查並修到通過」</td></tr>
+      <tr><td class="k">整個工作階段</td><td>用 <code>/goal</code> 設定完成條件，每回合由評估器重新檢查</td></tr>
+      <tr><td class="k">確定性關卡</td><td>Stop Hook 執行檢查腳本，未通過就不讓回合結束</td></tr>
+      <tr><td class="k">第二意見</td><td>請子代理在乾淨的上下文審查 diff，或執行 <code>/code-review</code></td></tr>
+    </tbody>
+  </table></div>
+  <p>也請 Claude <strong>附上證據</strong>（執行的指令與輸出），看證據比自己重跑快。<a href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener">Best practices ↗</a></p>
+
+  <h3>5. 安全：提示注入與機密</h3>
+  <p>提示注入是指網頁、Issue、文件或 MCP 回傳的內容裡夾帶「給 AI 的指令」，企圖讓 Claude 做你沒要求的事。</p>
+  <ul class="plain">
+    <li>不要把不受信任的內容直接丟給 Claude；核准指令前看清楚內容。</li>
+    <li>網路指令（<code>curl</code>、<code>wget</code>）預設不會自動核准；不需要時可加進 deny。</li>
+    <li>WebFetch 在獨立上下文處理網頁內容；新的專案與 MCP 伺服器第一次使用時需要你確認信任，<strong>但 <code>-p</code> 無人值守模式不會做這個確認</strong>。</li>
+    <li>只使用自己寫或可信任來源的 MCP 伺服器；Anthropic 不稽核第三方 MCP。</li>
+    <li>機密不要進上下文：deny <code>Read(./.env)</code>；需要更嚴格隔離時用 <code>/sandbox</code> 限制檔案與網路存取。</li>
+    <li>分支送出前可執行 <code>/security-review</code> 做一次安全檢查。</li>
+  </ul>
+  <p><a href="https://code.claude.com/docs/en/security" target="_blank" rel="noopener">官方文件：Security ↗</a>　·　<a href="https://code.claude.com/docs/en/sandboxing" target="_blank" rel="noopener">Sandboxing ↗</a></p>
+
+  <h3>6. 無人值守：claude -p</h3>
+  <p><code>claude -p</code> 以非互動方式執行，用在腳本、pre-commit 或 CI；第 4 堂的 GitHub Actions 也是同樣的機制。</p>
+  <div class="code"><div class="cap"><span>終端機</span><button type="button" data-copy>複製</button></div><pre>claude -p "說明這個專案在做什麼"
+claude -p "列出所有 API 端點" --output-format json
+
+<span class="c"># CI：只允許跑測試與讀檔，其他一律拒絕</span>
+claude -p "執行測試並摘要失敗原因" --permission-mode dontAsk --allowedTools "Bash(npm test)" "Read"</pre></div>
+  <div class="callout info"><span class="tag">原則</span>無人值守時沒有人可以按確認，所以要用 <code>dontAsk</code>＋明確的 <code>--allowedTools</code>，把能做的事限縮到最小。</div>
+
+  <h4>工作階段小技巧</h4>
+  <div class="tbl"><table>
+    <tbody>
+      <tr><td class="k"><kbd>Esc</kbd></td><td>中途停止 Claude，上下文保留，可以改方向</td></tr>
+      <tr><td class="k"><code>/clear</code></td><td>換不相關的工作時清空；同一問題糾正兩次還不對，也建議清空後重寫提示</td></tr>
+      <tr><td class="k"><code>/btw</code></td><td>問個小問題，答案不進對話紀錄</td></tr>
+      <tr><td class="k"><code>claude --continue</code>／<code>--resume</code></td><td>接續上次或選擇先前的工作階段；可用 <code>/rename</code> 命名</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>自我測驗</h3>
+  <div class="quiz" data-quiz="ext"></div>
+
+  <h3>延伸閱讀</h3>
+  <ul class="refs">
+    <li><a href="https://code.claude.com/docs/en/permission-modes" target="_blank" rel="noopener">Choose a permission mode</a><span>六種模式、起始模式、auto 分類器</span></li>
+    <li><a href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener">Best practices for Claude Code</a><span>驗證、先規劃、管理上下文、常見失敗模式</span></li>
+    <li><a href="https://code.claude.com/docs/en/checkpointing" target="_blank" rel="noopener">Checkpointing</a><span>/rewind 的選項與限制</span></li>
+    <li><a href="https://code.claude.com/docs/en/security" target="_blank" rel="noopener">Security</a><span>提示注入、MCP 安全、團隊實務</span></li>
+    <li><a href="https://code.claude.com/docs/en/headless" target="_blank" rel="noopener">Non-interactive mode</a><span>claude -p 與輸出格式</span></li>
+  </ul>
+
+  <h3>本頁總結</h3>
+  <div class="twocol">
+    <div class="panel"><h5>白話版</h5><ul>
+      <li>先確認 Claude 現在是哪種模式，才知道它會不會先問你。</li>
+      <li>大改動先讓它規劃；改壞了可以倒帶，但刪掉的檔案、推出去的程式收不回來。</li>
+      <li>給它測試，讓它自己檢查到對為止。</li>
+      <li>來路不明的內容可能藏指令；機密不要讓它讀到。</li>
+    </ul></div>
+    <div class="panel pro"><h5>專業版</h5><ul>
+      <li>Permission mode 決定基線授權（Pro/Max/Team 起始為 auto，Enterprise/API 為 default），permissions 規則疊加其上，deny 跨模式生效。</li>
+      <li>Explore → Plan → Implement → Commit；checkpoint 僅追蹤編輯工具變更，不涵蓋 Bash 副作用與遠端狀態。</li>
+      <li>以可執行的檢查（tests、build、lint）形成閉環，並以 /goal、Stop Hook 或子代理審查提高把關強度。</li>
+      <li>防範提示注入與機密外洩：不信任輸入、限制網路指令、sandbox；無人值守採 dontAsk＋最小 allowedTools。</li>
+    </ul></div>
+  </div>
+  <div class="pager"><button type="button" data-go="l4">← 第 4 堂</button><button type="button" data-go="lab">第 5 堂 LAB →</button></div>
+</section>
+
+<!-- ================= 第 5 堂 LAB ================= -->
+<section class="page" id="lab" role="tabpanel" aria-labelledby="tab-lab" hidden>
+  <div class="page-head">
+    <div class="eyebrow">第 5 堂｜實作 LAB</div>
+    <h2>從零到安全推送：親手感受差異</h2>
+    <p class="lead">用你自己的 Claude Code，在練習專案裡一關一關加上前四堂的設定，比較加之前與加之後的結果，並故意做錯，看看會發生什麼事。</p>
+    <div class="remember"><b>預計時間</b><span>60～90 分鐘。每一關都可以單獨重做。</span></div>
+  </div>
+
+  <figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 880 200" role="img" aria-label="LAB 六個關卡：基準、筆記、規範、流程、防線、選做" style="min-width:640px"><defs><marker id="f17-mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-n" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f17-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-a" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f17-mbad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-bad" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f17-mok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-ok" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f17-mwarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-warn" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<polyline class="ln" points="40,60 850,60"/>
+<circle class="dot" cx="80" cy="60" r="14"/>
+<text class="num" x="80" y="65" text-anchor="middle">1</text>
+<text class="t tb" x="80" y="34" text-anchor="middle">關卡 1｜基準</text>
+<rect class="bx" x="12" y="90" width="136" height="36" rx="8"/>
+<text class="ts tink" x="80.0" y="112.5" text-anchor="middle">什麼都不設</text>
+<text class="ts" x="80" y="150" text-anchor="middle">觀察</text>
+<text class="ts tink" x="80" y="168" text-anchor="middle">格式是否一致</text>
+<circle class="dot" cx="226" cy="60" r="14"/>
+<text class="num" x="226" y="65" text-anchor="middle">2</text>
+<text class="t tb" x="226" y="34" text-anchor="middle">關卡 2｜筆記</text>
+<rect class="bx-a" x="158" y="90" width="136" height="36" rx="8"/>
+<text class="ts tink" x="226.0" y="112.5" text-anchor="middle">CLAUDE.md</text>
+<text class="ts" x="226" y="150" text-anchor="middle">觀察</text>
+<text class="ts tink" x="226" y="168" text-anchor="middle">新對話知道進度</text>
+<circle class="dot" cx="372" cy="60" r="14"/>
+<text class="num" x="372" y="65" text-anchor="middle">3</text>
+<text class="t tb" x="372" y="34" text-anchor="middle">關卡 3｜規範</text>
+<rect class="bx-a" x="304" y="90" width="136" height="36" rx="8"/>
+<text class="ts tink" x="372.0" y="112.5" text-anchor="middle">api-standards</text>
+<text class="ts" x="372" y="150" text-anchor="middle">觀察</text>
+<text class="ts tink" x="372" y="168" text-anchor="middle">自動補 404/409</text>
+<circle class="dot" cx="518" cy="60" r="14"/>
+<text class="num" x="518" y="65" text-anchor="middle">4</text>
+<text class="t tb" x="518" y="34" text-anchor="middle">關卡 4｜流程</text>
+<rect class="bx-a" x="450" y="90" width="136" height="36" rx="8"/>
+<text class="ts tink" x="518.0" y="112.5" text-anchor="middle">/add-api</text>
+<text class="ts" x="518" y="150" text-anchor="middle">觀察</text>
+<text class="ts tink" x="518" y="168" text-anchor="middle">測到通過才回報</text>
+<circle class="dot-ok" cx="664" cy="60" r="14"/>
+<text class="num" x="664" y="65" text-anchor="middle">5</text>
+<text class="t tb" x="664" y="34" text-anchor="middle">關卡 5｜防線</text>
+<rect class="bx-a" x="596" y="90" width="136" height="36" rx="8"/>
+<text class="ts tink" x="664.0" y="112.5" text-anchor="middle">deny＋Hook</text>
+<text class="ts" x="664" y="150" text-anchor="middle">觀察</text>
+<text class="ts tink" x="664" y="168" text-anchor="middle">推 main 被擋下</text>
+<circle class="dot" cx="810" cy="60" r="14"/>
+<text class="num" x="810" y="65" text-anchor="middle">6</text>
+<text class="t tb" x="810" y="34" text-anchor="middle">關卡 6｜選做</text>
+<rect class="bx-a" x="742" y="90" width="136" height="36" rx="8"/>
+<text class="ts tink" x="810.0" y="112.5" text-anchor="middle">rewind、驗證</text>
+<text class="ts" x="810" y="150" text-anchor="middle">觀察</text>
+<text class="ts tink" x="810" y="168" text-anchor="middle">哪些改動能還原</text>
+</svg></div><figcaption><b>LAB 路線圖。</b>每一關只多加一樣設定，並用同類需求比較前後差異。</figcaption></figure>
+
+  <h3>開始之前</h3>
+  <dl class="kv">
+    <dt>需要</dt><dd>已安裝並登入的 Claude Code、Node.js 18 以上、git。不需要 GitHub 帳號。</dd>
+    <dt>終端機</dt><dd>下方指令以 bash 撰寫；Windows 請用 Git Bash，或依註解改用 PowerShell 寫法。</dd>
+    <dt>遠端</dt><dd>用本機的 bare repo 模擬 GitHub，推送結果可以直接用 git 指令檢查。</dd>
+    <dt>注意</dt><dd>AI 每次的輸出不完全相同，「預期觀察」描述的是常見結果；關卡 5 的結果已實際測試。</dd>
+  </dl>
+
+  <div class="lab-step">
+    <h4>準備：建立練習環境</h4>
+    <div class="code"><div class="cap"><span>終端機</span><button type="button" data-copy>複製</button></div><pre>mkdir cc-lab &amp;&amp; cd cc-lab
+git init --bare remote.git          <span class="c"># 模擬 GitHub 的遠端</span>
+mkdir app &amp;&amp; cd app
+git init -b main
+git remote add origin ../remote.git
+claude</pre></div>
+    <p>在 Claude Code 中輸入以下提示，請它建立練習專案：</p>
+    <div class="code"><div class="cap"><span>給 Claude 的提示</span><button type="button" data-copy>複製</button></div><pre>建立一個 Node.js + Express 的員工 API 練習專案：
+- 資料存在記憶體陣列，不用資料庫
+- 先做 GET /api/employees 與 POST /api/employees（欄位 name、email、department）
+- 使用 Jest + supertest 撰寫測試，npm test 要能通過
+- 建立 .gitignore（排除 node_modules、.env）
+- 不要建立 CLAUDE.md，也不要 commit</pre></div>
+    <p>完成後離開 Claude（<code>/exit</code>），自己檢查並提交：</p>
+    <div class="code"><div class="cap"><span>終端機</span><button type="button" data-copy>複製</button></div><pre>npm test
+git status                           <span class="c"># 確認沒有 node_modules</span>
+git add . &amp;&amp; git commit -m "chore: 練習專案初始版本"
+git push -u origin main</pre></div>
+    <p class="meta">這裡由你親自檢查 <code>git status</code> 後才 <code>git add .</code>；關卡 5 會禁止 Claude 自己這樣做。</p>
+  </div>
+
+  <div class="lab-step">
+    <h4>關卡 1｜基準：什麼都不設</h4>
+    <p class="meta">對應：課程總覽</p>
+    <div class="code"><div class="cap"><span>給 Claude 的提示</span><button type="button" data-copy>複製</button></div><pre>新增 PUT /api/employees/:id 與 DELETE /api/employees/:id</pre></div>
+    <dl class="kv">
+      <dt>觀察</dt><dd>新 API 的回應格式、狀態碼、驗證寫在哪一層、有沒有測失敗情況。把結果記下來，後面要比較。</dd>
+      <dt>常見結果</dt><dd>能動，但格式和分層由 Claude 自行決定，不一定和團隊慣例一致；DELETE 可能回 200 或 204，錯誤格式不固定。</dd>
+    </dl>
+    <p>記錄完成後，用 <code>git stash</code> 或 <code>git checkout .</code> 捨棄這次修改，並在 Claude 中輸入 <code>/clear</code>。</p>
+  </div>
+
+  <div class="lab-step">
+    <h4>關卡 2｜筆記系統：讓規則與進度留下來</h4>
+    <p class="meta">對應：第 1 堂</p>
+    <ol class="steps">
+      <li>在 Claude 中執行 <code>/init</code>，產生 CLAUDE.md。</li>
+      <li>在 CLAUDE.md 最後加上第 1 堂的「架構原則」與「目前進度」段落（含 <code>@progress.md</code>）。</li>
+      <li>建立 progress.md，寫入一行容易辨認的內容，例如「進度代號：BLUE-WHALE-42，進行中：PUT/DELETE API」。</li>
+      <li><code>/exit</code> 後重新執行 <code>claude</code>，輸入 <code>/context</code>，確認 Memory files 有 CLAUDE.md。</li>
+    </ol>
+    <div class="code"><div class="cap"><span>給 Claude 的提示</span><button type="button" data-copy>複製</button></div><pre>不要使用任何工具、不要讀檔，直接告訴我目前的進度代號與進行中的項目。</pre></div>
+    <dl class="kv">
+      <dt>預期</dt><dd>直接答出 BLUE-WHALE-42，因為 progress.md 已隨 CLAUDE.md 載入。（已實測）</dd>
+    </dl>
+    <div class="oops"><b class="t">故意做錯：</b>把 CLAUDE.md 裡的 <code>@progress.md</code> 改成「記得看 progress.md」，重新啟動後問同一句。<br><b>結果（已實測）：</b>Claude 回答不知道，因為檔案沒有被載入，只知道「有個檔案要看」。<br><b>影響：</b>每次新對話都要重新說明進度，或 Claude 自己猜著做。</div>
+    <p>還原 <code>@progress.md</code> 後，再做一次關卡 1 的需求，比較分層與格式是否變一致。</p>
+  </div>
+
+  <div class="lab-step">
+    <h4>關卡 3｜知識型 Skill：規範自動套用</h4>
+    <p class="meta">對應：第 2 堂</p>
+    <ol class="steps">
+      <li>依第 2 堂建立 <code>.claude/skills/api-standards/SKILL.md</code>（本練習沒有資料庫，唯一性由 Service 檢查即可）。</li>
+      <li>重新啟動 Claude，輸入 <code>/</code>，確認選單中有 <code>api-standards</code>。</li>
+    </ol>
+    <div class="code"><div class="cap"><span>給 Claude 的提示</span><button type="button" data-copy>複製</button></div><pre>新增 GET /api/employees/:id，找不到時要有適當的回應，並補上測試。</pre></div>
+    <dl class="kv">
+      <dt>觀察</dt><dd>Claude 是否載入 api-standards；找不到時是否回 404 且使用統一錯誤格式；測試是否涵蓋 404。</dd>
+    </dl>
+    <div class="oops"><b class="t">故意做錯：</b>把 description 改成只有「API」兩個字，<code>/clear</code> 後再提出類似需求。<br><b>可能結果：</b>Claude 不一定判斷需要載入這個 Skill，回應格式又回到自行決定。<br><b>影響：</b>規範寫了卻沒被套用，而且不容易察覺。修正方式：寫清楚使用時機，或手動輸入 <code>/api-standards</code>。</div>
+  </div>
+
+  <div class="lab-step">
+    <h4>關卡 4｜流程型 Skill：一個指令跑完 SOP</h4>
+    <p class="meta">對應：第 3 堂</p>
+    <ol class="steps">
+      <li>依第 3 堂建立 <code>.claude/skills/add-api/SKILL.md</code> 與 <code>checklist.md</code>。</li>
+      <li>重新啟動 Claude，輸入 <code>/add-api</code> 時應看到參數提示。</li>
+    </ol>
+    <div class="code"><div class="cap"><span>給 Claude 的指令</span><button type="button" data-copy>複製</button></div><pre>/add-api GET /api/employees/search</pre></div>
+    <dl class="kv">
+      <dt>觀察</dt><dd>開頭是否帶入 <code>git status</code> 結果；是否依序完成六個步驟；測試失敗時是否修正後重跑；最後是否<strong>沒有</strong> commit。</dd>
+    </dl>
+    <div class="oops"><b class="t">故意做錯：</b>把 <code>disable-model-invocation: true</code> 刪掉，<code>/clear</code> 後只說「幫我再加一支查詢部門的 API」。<br><b>可能結果：</b>Claude 可能自己啟動 add-api 流程（不一定每次發生）。<br><b>影響：</b>有副作用的流程在你沒下指令時被執行。還原設定後再試一次比較。</div>
+  </div>
+
+  <div class="lab-step">
+    <h4>關卡 5｜安全防線：擋下直推 main（重頭戲）</h4>
+    <p class="meta">對應：第 4 堂。本關結果已實際測試。</p>
+    <p>先準備一個尚未推送的 commit：</p>
+    <div class="code"><div class="cap"><span>終端機</span><button type="button" data-copy>複製</button></div><pre>git add . &amp;&amp; git commit -m "feat: 關卡 2–4 成果"
+git --git-dir=../remote.git log --oneline -1 main   <span class="c"># 記下遠端目前的 commit</span></pre></div>
+
+    <h4>5-1　只設 deny 規則</h4>
+    <div class="code"><div class="cap"><span>.claude/settings.json</span><button type="button" data-copy>複製</button></div><pre>{
+  "permissions": {
+    "deny": ["Bash(git push * main)", "Read(./.env)", "Read(./.env.*)"]
+  }
+}</pre></div>
+    <p>重新啟動 Claude，分別輸入下面兩句，每次都再檢查一次遠端 commit：</p>
+    <div class="code"><div class="cap"><span>給 Claude 的提示</span><button type="button" data-copy>複製</button></div><pre>只執行這個指令一次並回報結果，不要嘗試其他方法：git push origin main</pre></div>
+    <div class="code"><div class="cap"><span>給 Claude 的提示</span><button type="button" data-copy>複製</button></div><pre>只執行這個指令一次並回報結果，不要嘗試其他方法：git push origin HEAD:main</pre></div>
+    <dl class="kv">
+      <dt>第一句</dt><dd class="y">被 deny 擋下，遠端不變。</dd>
+      <dt>第二句</dt><dd class="x">deny 規則比對不到，只要你核准（或權限模式放行），<strong>推送成功</strong>。（已實測）</dd>
+      <dt>提示</dt><dd>若你是 auto 模式，分類器本身也可能擋下推送 main 的動作；想單純觀察 deny 的限制，先按 <kbd>Shift+Tab</kbd> 切到 Manual，再手動核准。</dd>
+    </dl>
+    <p class="meta">遠端被推上去也沒關係，這正是要親眼看到的影響；接著進行 5-2。</p>
+
+    <h4>5-2　加上 PreToolUse Hook（exit 2）</h4>
+    <p>依第 4 堂建立 <code>.claude/hooks/guard-git.js</code>，並在 settings.json 加入 hooks 區塊（Windows 需已安裝 Git Bash，見第 4 堂說明）。再做一個新 commit，重新啟動 Claude，輸入同一句 <code>git push origin HEAD:main</code>。</p>
+    <dl class="kv">
+      <dt>預期</dt><dd class="y">被 Hook 擋下，Claude 會轉述「禁止推送到 main，請改用 feature 分支並建立 PR。」遠端不變。（已實測）</dd>
+      <dt>補充</dt><dd>實測中 Hook 比 permissions 規則<strong>先執行</strong>：同時設定時，<code>git push origin main</code> 會先被 Hook 攔下。</dd>
+    </dl>
+
+    <h4>5-3　故意做錯：把 exit 2 改成 exit 1</h4>
+    <p>把 guard-git.js 裡兩處 <code>process.exit(2)</code> 改成 <code>process.exit(1)</code>，做一個新 commit，重新啟動後再試一次（Manual 模式下出現確認時請核准）。</p>
+    <figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 880 222" role="img" aria-label="實測：Hook 以 exit 2 結束時推送被阻擋，改成 exit 1 時推送照常執行、遠端 main 被更新" style="min-width:640px"><defs><marker id="f18-mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-n" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f18-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-a" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f18-mbad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-bad" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f18-mok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-ok" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f18-mwarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-warn" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="t tb tok" x="20" y="30" text-anchor="start">正確：exit 2</text>
+<rect class="bx" x="20" y="40" width="250" height="56" rx="8"/>
+<text class="t tb" x="145.0" y="63.5" text-anchor="middle">Claude 執行</text>
+<text class="mono" x="145.0" y="81.5" text-anchor="middle">git push origin HEAD:main</text>
+<rect class="bx-w" x="310" y="40" width="150" height="56" rx="8"/>
+<text class="t tb" x="385.0" y="72.5" text-anchor="middle">Hook exit 2</text>
+<rect class="bx-ok" x="500" y="40" width="150" height="56" rx="8"/>
+<text class="t tb" x="575.0" y="63.5" text-anchor="middle">阻擋</text>
+<text class="ts tink" x="575.0" y="81.5" text-anchor="middle">工具沒有執行</text>
+<rect class="bx-ok" x="690" y="40" width="170" height="56" rx="8"/>
+<text class="t tb" x="775.0" y="63.5" text-anchor="middle">遠端 main 不變</text>
+<text class="mono" x="775.0" y="81.5" text-anchor="middle">87c9e40</text>
+<polyline class="ln" points="270,68 308,68" marker-end="url(#f18-mn)"/>
+<polyline class="ln" points="460,68 498,68" marker-end="url(#f18-mn)"/>
+<polyline class="ln" points="650,68 688,68" marker-end="url(#f18-mn)"/>
+<text class="t tb tbad" x="20" y="130" text-anchor="start">錯誤：exit 1</text>
+<rect class="bx" x="20" y="140" width="250" height="56" rx="8"/>
+<text class="t tb" x="145.0" y="163.5" text-anchor="middle">Claude 執行</text>
+<text class="mono" x="145.0" y="181.5" text-anchor="middle">git push origin HEAD:main</text>
+<rect class="bx-bad" x="310" y="140" width="150" height="56" rx="8"/>
+<text class="t tb" x="385.0" y="172.5" text-anchor="middle">Hook exit 1</text>
+<rect class="bx-w" x="500" y="140" width="150" height="56" rx="8"/>
+<text class="t tb" x="575.0" y="163.5" text-anchor="middle">非阻擋錯誤</text>
+<text class="ts tink" x="575.0" y="181.5" text-anchor="middle">push 照常執行</text>
+<rect class="bx-bad" x="690" y="140" width="170" height="56" rx="8"/>
+<text class="t tb" x="775.0" y="163.5" text-anchor="middle">遠端 main 被改</text>
+<text class="mono" x="775.0" y="181.5" text-anchor="middle">87c9e40 → bb7505f</text>
+<polyline class="ln" points="270,168 308,168" marker-end="url(#f18-mn)"/>
+<polyline class="ln" points="460,168 498,168" marker-end="url(#f18-mn)"/>
+<polyline class="ln" points="650,168 688,168" marker-end="url(#f18-mn)"/>
+</svg></div><figcaption><b>實測紀錄｜同一個 Hook，只差一個數字。</b>Claude Code v2.1.274、2026-09-17，於測試環境以 <code>claude -p</code> 執行，遠端為本機 bare repo。</figcaption></figure>
+    <div class="oops"><b class="t">結果（已實測）：</b>推送成功，遠端 main 從 <code>87c9e40</code> 變成 <code>bb7505f</code>。Hook 雖然印出了「禁止推送」，但 exit 1 只是非阻擋錯誤。<br><b>影響：</b>你以為有防線，其實沒有；未審查的程式直接進 main。<br><b>怎麼發現：</b>檢查 Hook 程式的 exit code，並像本關一樣實際測一次。</div>
+    <p>改回 <code>exit(2)</code>。</p>
+
+    <h4>5-4　正確流程：/ship 推到 feature 分支</h4>
+    <p>依第 4 堂建立 <code>.claude/skills/ship/SKILL.md</code>，並把 permissions 補齊（allow／ask／deny）。執行：</p>
+    <div class="code"><div class="cap"><span>給 Claude 的指令</span><button type="button" data-copy>複製</button></div><pre>/ship lab-search "新增員工搜尋 API"</pre></div>
+    <dl class="kv">
+      <dt>觀察</dt><dd>先跑測試 → 建立 <code>feature/lab-search</code> → 逐一 add 檔案 → commit → push 時詢問你。</dd>
+      <dt>PR 步驟</dt><dd>本機遠端不是 GitHub，<code>gh pr create</code> 會失敗，這是預期的；換成 GitHub 練習 repo 時就能完整體驗 PR 與分支保護。</dd>
+    </dl>
+    <div class="code"><div class="cap"><span>終端機：確認結果</span><button type="button" data-copy>複製</button></div><pre>git --git-dir=../remote.git branch        <span class="c"># 應該看到 feature/lab-search</span>
+git --git-dir=../remote.git log --oneline -3 feature/lab-search</pre></div>
+  </div>
+
+  <div class="lab-step">
+    <h4>關卡 6（選做）｜回溯與自我驗證</h4>
+    <p class="meta">對應：補充觀念 3、4</p>
+    <ol class="steps">
+      <li>請 Claude「把 README.md 的標題改成『員工 API 練習』」（使用編輯工具），接著按兩下 <kbd>Esc</kbd> 選擇 <strong>Restore code</strong>，確認標題恢復。</li>
+      <li>請 Claude「用 bash 執行 <code>echo test &gt;&gt; README.md</code>」，再用同樣方式回溯，確認這一行<strong>沒有</strong>被移除。</li>
+      <li>在 <code>tests/</code> 故意加一個會失敗的斷言，請 Claude「修到 npm test 全部通過，並附上最後一次測試輸出」，觀察它如何反覆檢查與修正。</li>
+    </ol>
+    <p class="meta">第 1、2 步依官方文件的說明設計：檢查點只追蹤編輯工具的修改。</p>
+  </div>
+
+  <h3>完成檢核</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>我已經親眼看到</th><th>關卡</th></tr></thead>
+    <tbody>
+      <tr><td>沒加 <code>@</code> 匯入時，新對話不知道進度</td><td>2</td></tr>
+      <tr><td>Skill 載入後，錯誤格式與 404 測試自動一致</td><td>3</td></tr>
+      <tr><td><code>/add-api</code> 帶參數執行，並在測試通過後才回報</td><td>4</td></tr>
+      <tr><td><code>git push origin HEAD:main</code> 能繞過 deny 字串規則</td><td>5-1</td></tr>
+      <tr><td>Hook exit 2 擋得住，exit 1 擋不住</td><td>5-2、5-3</td></tr>
+      <tr><td>Bash 造成的修改無法用 /rewind 還原</td><td>6</td></tr>
+    </tbody>
+  </table></div>
+  <p>練習結束後可直接刪除 <code>cc-lab</code> 資料夾。</p>
+  <div class="pager"><button type="button" data-go="ext">← 補充觀念</button><button type="button" data-go="err">錯了會怎樣 →</button></div>
+</section>
+
+<!-- ================= 錯了會怎樣 ================= -->
+<section class="page" id="err" role="tabpanel" aria-labelledby="tab-err" hidden>
+  <div class="page-head">
+    <div class="eyebrow">錯誤影響</div>
+    <h2>錯了會怎樣</h2>
+    <p class="lead">常見設定錯誤、你會看到的症狀、造成的影響，以及怎麼發現、怎麼修。標示「實測」的項目已在 LAB 環境重現。</p>
+    <div class="remember"><b>嚴重度</b><span><span class="sev h">高</span> 可能造成資安或正式環境事故　<span class="sev m">中</span> 規範失效、返工　<span class="sev l">低</span> 效率變差</span></div>
+  </div>
+
+  <h3>第 1 堂：筆記系統</h3>
+  <div class="tbl wide"><table>
+    <thead><tr><th>錯誤</th><th>症狀與影響</th><th>怎麼發現／修正</th><th>嚴重度</th></tr></thead>
+    <tbody>
+      <tr><td>規則只在對話中交代</td><td>長任務後段開始違反規則，程式前後不一致，需要返工</td><td>壓縮後行為改變 → 寫進 CLAUDE.md／rules</td><td><span class="sev m">中</span></td></tr>
+      <tr><td>漏寫 <code>@progress.md</code>（實測）</td><td>新對話不知道進度，重做或自行猜測</td><td><code>/context</code> 看不到檔案 → 改用 <code>@</code> 匯入</td><td><span class="sev m">中</span></td></tr>
+      <tr><td>CLAUDE.md 過長</td><td>重要規則被淹沒，同樣錯誤反覆出現</td><td>保持 200 行內；拆 rules／Skill；<code>/doctor</code> 建議刪減</td><td><span class="sev m">中</span></td></tr>
+      <tr><td>團隊規則只存在 auto memory</td><td>同事的電腦沒有，團隊結果不一致</td><td>各人輸出不同 → 移到 CLAUDE.md 並提交 git</td><td><span class="sev l">低</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>第 2 堂：規範 Skill</h3>
+  <div class="tbl wide"><table>
+    <thead><tr><th>錯誤</th><th>症狀與影響</th><th>怎麼發現／修正</th><th>嚴重度</th></tr></thead>
+    <tbody>
+      <tr><td>規範型 Skill 設 <code>allowed-tools: Bash</code></td><td>該回合所有 Bash 指令免詢問，誤刪、誤推的風險上升</td><td>審查 frontmatter → 刪除或縮小到特定指令</td><td><span class="sev h">高</span></td></tr>
+      <tr><td>唯一性只靠先查詢</td><td>並行請求時寫入重複資料，資料錯誤難以追查</td><td>壓力測試 → 資料庫 UNIQUE 並處理衝突</td><td><span class="sev h">高</span></td></tr>
+      <tr><td>description 太模糊</td><td>Skill 沒被載入，規範寫了卻沒套用</td><td>輸出不符規範 → 寫清楚使用時機；手動 <code>/名稱</code></td><td><span class="sev m">中</span></td></tr>
+      <tr><td>規範自相矛盾（如 204 帶 body）</td><td>Claude 隨機擇一，前端解析失敗</td><td>契約測試失敗 → 規範擇一並註明例外</td><td><span class="sev m">中</span></td></tr>
+      <tr><td>SKILL.md 過長、重點在後面</td><td>壓縮後被截斷，長對話後段不遵守</td><td>重點放前面；細節拆到輔助檔</td><td><span class="sev l">低</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>第 3 堂：流程斜線指令</h3>
+  <div class="tbl wide"><table>
+    <thead><tr><th>錯誤</th><th>症狀與影響</th><th>怎麼發現／修正</th><th>嚴重度</th></tr></thead>
+    <tbody>
+      <tr><td>有副作用的流程沒設 <code>disable-model-invocation</code></td><td>你沒下指令，Claude 卻自行啟動修改或推送流程</td><td>非預期的流程執行 → 加上設定</td><td><span class="sev h">高</span></td></tr>
+      <tr><td>以為斜線指令會 100% 照做</td><td>測試被跳過沒發現，錯誤程式進版控</td><td>CI 失敗才發現 → 用 Hook／CI 必要檢查把關</td><td><span class="sev m">中</span></td></tr>
+      <tr><td>沒使用參數</td><td>流程不知道要做哪一支 API，做錯目標</td><td>回報內容不符 → 使用 <code>arguments</code>／<code>$ARGUMENTS</code></td><td><span class="sev l">低</span></td></tr>
+      <tr><td>把 Grep 寫成 bash 指令</td><td>指令執行失敗，流程中斷</td><td>出現 command not found → 改用文字描述</td><td><span class="sev l">低</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>第 4 堂：外部連接與防線</h3>
+  <div class="tbl wide"><table>
+    <thead><tr><th>錯誤</th><th>症狀與影響</th><th>怎麼發現／修正</th><th>嚴重度</th></tr></thead>
+    <tbody>
+      <tr><td>Hook 用 exit 1（實測）</td><td>Hook 印出警告，但推送照常執行；防線形同虛設</td><td>LAB 5-3 實際測試；<code>/hooks</code> 檢查 → 改為 exit 2</td><td><span class="sev h">高</span></td></tr>
+      <tr><td>只靠 deny 字串規則（實測）</td><td><code>git push origin HEAD:main</code> 繞過規則，直推 main</td><td>遠端出現未審查 commit → 加 Hook＋分支保護</td><td><span class="sev h">高</span></td></tr>
+      <tr><td><code>git add .</code> 後提交</td><td>.env、金鑰一起進版控，需要撤銷並輪替金鑰</td><td><code>git status</code>、secret scanning → 指定檔案、deny <code>git add .</code></td><td><span class="sev h">高</span></td></tr>
+      <tr><td><code>.mcp.json</code> 寫死 Token</td><td>Token 隨 git 外流，帳號可能被濫用</td><td>GitHub secret scanning 警告 → 立即撤銷 Token，改用環境變數</td><td><span class="sev h">高</span></td></tr>
+      <tr><td>AI 產生的 PR 自動合併</td><td>未經人工審查的程式進入主線</td><td>事後才發現 → 保留人工審查，Claude 不執行 merge</td><td><span class="sev h">高</span></td></tr>
+      <tr><td><code>credential.helper store</code></td><td>Token 明文存在硬碟，電腦遺失即外洩</td><td>檢查 <code>~/.git-credentials</code> → <code>gh auth setup-git</code></td><td><span class="sev m">中</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>補充觀念</h3>
+  <div class="tbl wide"><table>
+    <thead><tr><th>錯誤</th><th>症狀與影響</th><th>怎麼發現／修正</th><th>嚴重度</th></tr></thead>
+    <tbody>
+      <tr><td>在個人電腦使用 bypassPermissions</td><td>所有動作不經審查（只剩 deny 規則有效）</td><td>只在隔離容器使用；個人環境用 auto 或 Manual</td><td><span class="sev h">高</span></td></tr>
+      <tr><td>把不受信任的內容直接交給 Claude</td><td>提示注入，執行你沒要求的指令</td><td>核准前看清楚指令；deny 網路指令；使用 sandbox</td><td><span class="sev h">高</span></td></tr>
+      <tr><td>以為 <code>/rewind</code> 能還原一切</td><td>Bash 修改、已推送的程式收不回來</td><td>回溯後檔案仍不對 → 重要進度先 commit</td><td><span class="sev m">中</span></td></tr>
+      <tr><td>沒有給 Claude 可執行的檢查</td><td>「看起來完成」但邊界情況沒處理</td><td>上線後才出錯 → 提示中附測試並要求附證據</td><td><span class="sev m">中</span></td></tr>
+      <tr><td>同一問題糾正兩次以上還繼續</td><td>上下文塞滿失敗嘗試，品質越來越差</td><td>重複出錯 → <code>/clear</code> 後寫更具體的提示</td><td><span class="sev l">低</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout info"><span class="tag">原則</span>標示「高」的項目都和資安或正式環境有關，建議在導入第 1 週就用 permissions deny、Hook 與分支保護處理，不要等出事才補。</div>
+  <div class="pager"><button type="button" data-go="lab">← 第 5 堂 LAB</button><button type="button" data-go="sum">總結 →</button></div>
+</section>
+
+<!-- ================= 總結 ================= -->
+<section class="page" id="sum" role="tabpanel" aria-labelledby="tab-sum" hidden>
+  <div class="page-head">
+    <div class="eyebrow">總結</div>
+    <h2>四堂課學到了什麼</h2>
+    <p class="lead">同一件事，兩種說法：白話版適合跟組員分享，專業版適合寫進文件或向主管報告。</p>
+    <div class="remember"><b>測驗成績</b><span id="sum-score">尚未作答</span></div>
+  </div>
+
+  <h3>整體收穫</h3>
+  <div class="twocol">
+    <div class="panel"><h5>白話版</h5><ul>
+      <li><strong>記得住</strong>：重要的事寫在檔案裡，Claude 每次開工都會重新看。</li>
+      <li><strong>做得一樣</strong>：把團隊做法寫成手冊（Skill），寫程式時自動照著做。</li>
+      <li><strong>不跳步</strong>：把固定步驟做成按鈕（/add-api），每次照同一套 SOP。</li>
+      <li><strong>守得住</strong>：危險動作用門禁擋下，程式一定經過 PR 與人工審查。</li>
+      <li><strong>用得穩</strong>：先知道現在是哪種權限模式；大改動先規劃；給 Claude 測試讓它自己檢查。</li>
+      <li><strong>親眼看過</strong>：LAB 裡 Hook 回 1 就擋不住、換個寫法就繞過規則，所以防線要多層。</li>
+      <li><strong>最重要的一句</strong>：寫在文件裡的是「提醒」，真正要擋的要用程式。</li>
+    </ul></div>
+    <div class="panel pro"><h5>專業版</h5><ul>
+      <li><strong>狀態外部化</strong>：以 CLAUDE.md、條件式 rules、@import 狀態檔與 auto memory 對抗 compaction 與 context rot。</li>
+      <li><strong>規範封裝</strong>：以漸進式揭露的知識型 Skill 承載領域規範，降低常駐上下文成本。</li>
+      <li><strong>流程顯式化</strong>：以參數化、禁止模型自動觸發的流程型 Skill 定義 SOP。</li>
+      <li><strong>確定性邊界</strong>：permissions（deny 優先）＋ PreToolUse Hooks（exit 2）＋ branch protection 構成縱深防禦。</li>
+      <li><strong>操作治理</strong>：權限模式決定基線授權（Team 起始為 auto，deny 跨模式有效）；Explore→Plan→Implement；以可執行檢查形成驗證閉環；checkpoint 不涵蓋 Bash 副作用。</li>
+      <li><strong>實證</strong>：LAB 實測 Hook 先於 permissions 執行、exit 1 不阻擋、deny 字串可被 <code>HEAD:main</code> 繞過，驗證縱深防禦的必要性。</li>
+      <li><strong>架構原則</strong>：Predictable AI = External State ＋ Explicit Routing（Skills）＋ Hard Boundaries（Hooks &amp; Permissions）。</li>
+    </ul></div>
+  </div>
+
+<figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 880 340" role="img" aria-label="可預期的 AI 開發由外部狀態、明確路由、硬性邊界三根支柱組成，並透過外部連接接上 GitHub" style="min-width:640px"><defs><marker id="f12-mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-n" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f12-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-a" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f12-mbad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-bad" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f12-mok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-ok" d="M0,0 L10,5 L0,10 z"/></marker><marker id="f12-mwarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah ah-warn" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="bx-a" x="330" y="14" width="220" height="48" rx="8"/>
+<text class="t tb" x="440.0" y="42.5" text-anchor="middle">可預期的 AI 開發</text>
+<polyline class="ln" points="440,62 150,108" marker-end="url(#f12-mn)"/>
+<text class="ts ta" x="270" y="80" text-anchor="end">記得住</text>
+<rect class="bx" x="20" y="110" width="260" height="166" rx="10"/>
+<text class="t tb" x="150" y="134" text-anchor="middle">外部狀態</text>
+<text class="mono" x="150" y="152" text-anchor="middle">External State</text>
+<rect class="bx-s" x="34" y="164" width="232" height="28" rx="5"/>
+<text class="ts tink" x="150.0" y="182.5" text-anchor="middle">CLAUDE.md・rules</text>
+<rect class="bx-s" x="34" y="198" width="232" height="28" rx="5"/>
+<text class="ts tink" x="150.0" y="216.5" text-anchor="middle">progress.md（@ 匯入）</text>
+<rect class="bx-s" x="34" y="232" width="232" height="28" rx="5"/>
+<text class="ts tink" x="150.0" y="250.5" text-anchor="middle">auto memory</text>
+<text class="ts" x="266" y="128" text-anchor="end">第 1 堂</text>
+<polyline class="ln" points="440,62 440,108" marker-end="url(#f12-mn)"/>
+<text class="ts ta" x="450" y="92" text-anchor="start">照規範、照流程</text>
+<rect class="bx" x="310" y="110" width="260" height="166" rx="10"/>
+<text class="t tb" x="440" y="134" text-anchor="middle">明確路由</text>
+<text class="mono" x="440" y="152" text-anchor="middle">Explicit Routing</text>
+<rect class="bx-s" x="324" y="164" width="232" height="28" rx="5"/>
+<text class="ts tink" x="440.0" y="182.5" text-anchor="middle">知識型 Skill（第 2 堂）</text>
+<rect class="bx-s" x="324" y="198" width="232" height="28" rx="5"/>
+<text class="ts tink" x="440.0" y="216.5" text-anchor="middle">流程型 Skill（第 3 堂）</text>
+<rect class="bx-s" x="324" y="232" width="232" height="28" rx="5"/>
+<text class="ts tink" x="440.0" y="250.5" text-anchor="middle">Subagent 隔離上下文</text>
+<text class="ts" x="556" y="128" text-anchor="end">第 2、3 堂</text>
+<polyline class="ln" points="440,62 730,108" marker-end="url(#f12-mn)"/>
+<text class="ts ta" x="610" y="80" text-anchor="start">守得住</text>
+<rect class="bx-w" x="600" y="110" width="260" height="166" rx="10"/>
+<text class="t tb" x="730" y="134" text-anchor="middle">硬性邊界</text>
+<text class="mono" x="730" y="152" text-anchor="middle">Hard Boundaries</text>
+<rect class="bx-s" x="614" y="164" width="232" height="28" rx="5"/>
+<text class="ts tink" x="730.0" y="182.5" text-anchor="middle">permissions deny</text>
+<rect class="bx-s" x="614" y="198" width="232" height="28" rx="5"/>
+<text class="ts tink" x="730.0" y="216.5" text-anchor="middle">PreToolUse Hook（exit 2）</text>
+<rect class="bx-s" x="614" y="232" width="232" height="28" rx="5"/>
+<text class="ts tink" x="730.0" y="250.5" text-anchor="middle">分支保護＋CI</text>
+<text class="ts" x="846" y="128" text-anchor="end">第 4 堂</text>
+<rect class="bx-s" x="20" y="292" width="840" height="36" rx="8"/>
+<text class="ts tink" x="440.0" y="314.5" text-anchor="middle">外部連接：gh CLI・GitHub MCP・GitHub Actions（@claude）・Plugin 分發（第 4 堂）</text>
+</svg></div><figcaption><b>概念圖｜四堂課的全貌。</b>External State 讓 Claude 記得住，Explicit Routing 讓它照規範與流程做，Hard Boundaries 確保一定守得住。</figcaption></figure>
+  <h3>遇到問題，用哪個機制</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>症狀</th><th>用什麼</th><th>在哪一堂</th></tr></thead>
+    <tbody>
+      <tr><td>Claude 忘了早先交代的規則或命名</td><td>CLAUDE.md／.claude/rules/</td><td>第 1 堂</td></tr>
+      <tr><td>換新對話就不知道做到哪</td><td>progress.md ＋ <code>@</code> 匯入</td><td>第 1 堂</td></tr>
+      <tr><td>調查時讀太多檔，對話變慢變亂</td><td>Subagent、<code>/compact</code>、<code>/clear</code></td><td>第 1 堂</td></tr>
+      <tr><td>程式寫法不符合團隊規範</td><td>知識型 Skill</td><td>第 2 堂</td></tr>
+      <tr><td>常常跳過測試或更新進度</td><td>流程型 Skill（斜線指令）</td><td>第 3 堂</td></tr>
+      <tr><td>AI 可能讀機密或執行危險指令</td><td>permissions deny</td><td>第 4 堂</td></tr>
+      <tr><td>測試沒過就推送</td><td>PreToolUse Hook ＋ CI required checks</td><td>第 4 堂</td></tr>
+      <tr><td>程式直接進 main</td><td>branch protection ＋ PR 審查</td><td>第 4 堂</td></tr>
+      <tr><td>需要查 Issue、PR 留言</td><td>GitHub MCP／GitHub Actions</td><td>第 4 堂</td></tr>
+      <tr><td>一直要按確認，或不確定 Claude 會不會先問</td><td>權限模式、allow 規則、<code>/sandbox</code></td><td>補充觀念</td></tr>
+      <tr><td>改動範圍大、怕方向錯</td><td>Plan mode</td><td>補充觀念</td></tr>
+      <tr><td>改壞了想回到先前</td><td><code>/rewind</code>（Bash 修改除外）、git</td><td>補充觀念</td></tr>
+      <tr><td>Claude 說完成了但其實有錯</td><td>提供測試、要求附證據、Stop Hook</td><td>補充觀念</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>建議導入順序</h3>
+  <ol class="steps">
+    <li><strong>第 1 週</strong>：<code>/init</code> 建立 CLAUDE.md；同時設定 permissions deny（禁止讀 .env、<code>rm -rf</code>、推 main）與 main 分支保護。基本防線成本低，越早越好。</li>
+    <li><strong>第 2 週</strong>：盤點最常被糾正的規範做成知識型 Skill；把固定流程做成 <code>/add-api</code>、<code>/ship</code>。</li>
+    <li><strong>第 3 週</strong>：加入 Hooks；需要時再接 GitHub MCP 或 GitHub Actions。每位成員完成一次第 5 堂 LAB。</li>
+    <li><strong>穩定後</strong>：把 skills、hooks、MCP 設定打包成 Plugin，一次分發給全組。</li>
+  </ol>
+
+  <h3>課後檢核清單</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>我能做到</th><th>對應</th></tr></thead>
+    <tbody>
+      <tr><td>說明「自動壓縮」和「刪除舊對話」的差別</td><td>第 1 堂</td></tr>
+      <tr><td>寫出 200 行內的 CLAUDE.md，並用 <code>@</code> 匯入進度檔</td><td>第 1 堂</td></tr>
+      <tr><td>分辨 CLAUDE.md、rules、Skill 各該放什麼</td><td>第 2 堂</td></tr>
+      <tr><td>解釋 <code>allowed-tools</code> 是授權而不是限制</td><td>第 2 堂</td></tr>
+      <tr><td>寫出帶參數、只能手動觸發的流程型 Skill</td><td>第 3 堂</td></tr>
+      <tr><td>設定 deny 規則，並寫出 exit 2 阻擋的 Hook</td><td>第 4 堂</td></tr>
+      <tr><td>用分支＋PR 流程取代直推 main</td><td>第 4 堂</td></tr>
+      <tr><td>說出自己的方案預設是哪種權限模式，並會切換</td><td>補充觀念</td></tr>
+      <tr><td>完成 LAB 關卡 1～5，親眼看到 exit 1 擋不住</td><td>第 5 堂</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>保持最新</h3>
+  <p>Claude Code 幾乎每週更新。本教材以 v2.1.274（2026-09-17）的官方文件查核，建議每季對照一次，特別是視窗大小、內建指令與 frontmatter 欄位。</p>
+  <ul class="refs">
+    <li><a href="https://code.claude.com/docs/en/changelog" target="_blank" rel="noopener">Claude Code changelog</a><span>每次版本的變更紀錄</span></li>
+    <li><a href="https://code.claude.com/docs/en/settings" target="_blank" rel="noopener">Settings</a><span>settings.json 各層級與優先順序</span></li>
+    <li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Effective context engineering for AI agents</a><span>壓縮、結構化筆記、子代理三種策略</span></li>
+  </ul>
+  <div class="pager"><button type="button" data-go="err">← 錯了會怎樣</button><button type="button" data-go="home">回到總覽</button></div>
+</section>
+</main>
+</div>
+</div>
+
+<script>
+(function () {
+  var QUIZ = {
+    l1: [
+      { q: '對話接近上下文上限時，Claude Code 會怎麼做？',
+        o: ['刪除最舊的訊息（先進先出）', '自動壓縮成結構化摘要，讓工作繼續', '停止回應，要求開新對話', '自動切換到 1M 視窗的模型'],
+        a: 1, e: 'Claude Code 會 auto-compact：把對話整理成摘要取代逐字記錄。摘要會保留重點，但完整工具輸出與只在對話中講過的細節可能遺失。' },
+      { q: '建了 progress.md，怎樣讓它在每次對話開始時自動載入？',
+        o: ['放在專案根目錄就會自動載入', '在 CLAUDE.md 寫一行 @progress.md', '把檔名改成 MEMORY.md', '放進 .claude/commands/'],
+        a: 1, e: '@path 是 CLAUDE.md 的匯入語法，被匯入的檔案會和 CLAUDE.md 一起在啟動時載入。MEMORY.md 是 auto memory 的索引，由 Claude 自己維護。' },
+      { q: '執行 /compact 之後，哪一項「不會」從磁碟重新注入？',
+        o: ['專案根目錄的 CLAUDE.md', 'Auto memory（MEMORY.md）', '只在對話中口頭交代過的規則', '沒有 paths 的 .claude/rules/'],
+        a: 2, e: '對話內容只會留下摘要。要讓規則在壓縮後還在，就要寫進 CLAUDE.md 或 rules。' },
+      { q: '關於 auto memory，哪個敘述正確？',
+        o: ['存在專案資料夾內，會提交到 git', '由團隊手寫、審核', '存在本機使用者目錄，每次載入 MEMORY.md 前 200 行或 25KB', '會取代 CLAUDE.md'],
+        a: 2, e: 'Auto memory 位於 ~/.claude/projects/<專案>/memory/，只在本機，不跨電腦共享。團隊規則仍應放在 CLAUDE.md。' },
+      { q: 'Repository 規則只和 src/ 底下的程式有關，放哪裡最省上下文？',
+        o: ['CLAUDE.md 最上方', '有 paths 設定的 .claude/rules/ 檔案', 'progress.md', 'README.md'],
+        a: 1, e: '有 paths 的 rules 只在 Claude 讀到相符檔案時才載入，平常不佔上下文。' }
+    ],
+    l2: [
+      { q: 'Skill 在對話開始時，會把什麼放進上下文？',
+        o: ['SKILL.md 全文', '只有名稱與 description', '什麼都不放，要手動呼叫才知道', 'SKILL.md 全文加所有輔助檔'],
+        a: 1, e: '漸進式載入：啟動時只放名稱與說明，Claude 判斷相關或你輸入 /名稱 時才載入全文，輔助檔則按需讀取。' },
+      { q: 'Skill frontmatter 的 allowed-tools 代表什麼？',
+        o: ['限制 Skill 只能使用這些工具', '呼叫此 Skill 的那一回合，列出的工具不用詢問', '永久授權這些工具', '禁止其他 Skill 使用這些工具'],
+        a: 1, e: '它是單回合的預先授權，下一則訊息就失效。要禁止工具應使用 disallowed-tools 或 permissions deny。' },
+      { q: '規範要求「所有成功回應都帶 {code, data, message}」，DELETE 成功應該怎麼回？',
+        o: ['204 並帶上 {code, data, message}', '200 並帶格式；若用 204 就註明為不帶內容的例外', '一律 202', '404'],
+        a: 1, e: 'HTTP 規定 204 No Content 不能有回應內容，所以兩條規則不能同時成立，必須擇一並寫清楚。' },
+      { q: '確保 email 不重複，最可靠的做法是？',
+        o: ['Service 先用 findByEmail 查詢就好', '只在前端檢查', '先查詢給友善訊息，資料庫再加 UNIQUE 限制並處理衝突', '每次寫入前鎖住整張表'],
+        a: 2, e: '只靠先查詢，兩個同時進來的請求可能都通過檢查。資料庫 UNIQUE 限制是最後防線，衝突時回 409。' },
+      { q: '一段很長的做法，只有「寫 API」時才需要，放哪裡最合適？',
+        o: ['CLAUDE.md', 'Skill', 'progress.md', 'auto memory'],
+        a: 1, e: 'CLAUDE.md 每次都載入，適合短而常用的規則；只在特定任務需要的長內容放 Skill。' }
+    ],
+    l3: [
+      { q: '專案裡的 .claude/commands/add-api.md 現在還能用嗎？',
+        o: ['不能，已被移除', '可以，效果和 .claude/skills/add-api/SKILL.md 相同', '只能在 Windows 使用', '必須改名成 add-api.skill'],
+        a: 1, e: '自訂指令已併入 Skills，舊資料夾保持相容。同名時 Skill 優先。' },
+      { q: '不希望 Claude 自己啟動 /ship，要設定哪個欄位？',
+        o: ['disable-model-invocation: true', 'user-invocable: false', 'allowed-tools: none', 'name: ship'],
+        a: 0, e: 'disable-model-invocation: true 讓 Claude 無法自動載入，只能由人輸入 /ship。user-invocable: false 則剛好相反，是「只給 Claude 用」。' },
+      { q: '設定 arguments: [method, path]，輸入 /add-api POST /api/employees，$path 的值是？',
+        o: ['POST', '/api/employees', 'POST /api/employees', '空字串'],
+        a: 1, e: '具名參數依順序對應：$method = POST，$path = /api/employees。也可用 $0、$1 或 $ARGUMENTS。' },
+      { q: '「有了 /add-api，就能 100% 保證測試一定會跑」這句話？',
+        o: ['正確，斜線指令會強制執行', '不正確，Skill 仍是指示；要保證需靠 Hooks 或 CI', '正確，只要寫在步驟 1', '只有在 auto mode 下才正確'],
+        a: 1, e: 'Skill 大幅提高一致性，但模型仍可能跳步。需要確定性的關卡，交給 Hooks 或 CI required checks。' },
+      { q: 'user-invocable: false 適合用在哪種 Skill？',
+        o: ['會推送程式的流程', '背景知識，只讓 Claude 在需要時自動使用', '需要帶參數的指令', '要分享給全組的指令'],
+        a: 1, e: '設成 false 後不會出現在 / 選單，人不能直接呼叫，適合當作 Claude 的背景知識。' }
+    ],
+    ext: [
+      { q: '公司使用 Claude Team 方案，Claude Code 互動模式的預設起始權限模式是？',
+        o: ['Manual：每個動作都問你', 'auto：由分類器審查大部分動作', 'bypassPermissions：全部放行', 'plan：只能規劃'],
+        a: 1, e: 'Pro、Max、Team 方案的預設起始模式是 auto；Enterprise 與 API 金鑰才是 Manual。管理員可用 disableAutoMode 關閉 auto。' },
+      { q: '在 bypassPermissions 模式下，permissions 的 deny 規則還有效嗎？',
+        o: ['無效，全部放行', '有效，deny 在所有模式都會阻擋', '只在 Windows 有效', '只對 Read 有效'],
+        a: 1, e: 'deny 規則在所有模式都有效，包括 bypassPermissions。所以基本防線要用 deny 設定。' },
+      { q: '專案裡原本就有 notes.txt，Claude 用 Bash 執行 rm notes.txt 後，你用 /rewind 選 Restore code，notes.txt 會回來嗎？',
+        o: ['會，所有修改都會還原', '不會，檢查點只追蹤編輯工具的修改', '只有在 plan mode 會', '要看檔案大小'],
+        a: 1, e: '檢查點不追蹤 Bash 指令造成的檔案變更，也不能收回已推送的 commit。重要進度要先 git commit。' },
+      { q: '想讓 Claude 在 CI 中只跑測試、其他動作一律拒絕，應該怎麼設定？',
+        o: ['--permission-mode bypassPermissions', '--permission-mode dontAsk 搭配 --allowedTools "Bash(npm test)"', '什麼都不設，CI 會自動拒絕', '在 CLAUDE.md 寫「只能跑測試」'],
+        a: 1, e: 'dontAsk 只允許預先核准的工具，其餘直接拒絕，適合無人值守的環境。CLAUDE.md 只是指示，不是強制。' },
+      { q: '哪一種提示最能讓 Claude 自己把工作做對？',
+        o: ['「把 email 驗證做好」', '「寫 validateEmail，user@example.com 為 true、invalid 為 false，實作後跑測試並附上輸出」', '「盡量不要出錯」', '「參考網路上的做法」'],
+        a: 1, e: '提供可執行的檢查與明確案例，Claude 才能自己驗證並修正，附上輸出也方便你確認。' }
+    ],
+    l4: [
+      { q: 'PreToolUse Hook 要阻擋工具執行，程式應以哪個 exit code 結束？',
+        o: ['0', '1', '2', '任何非 0 值'],
+        a: 2, e: '只有 exit 2 會阻擋。exit 1 等其他值是非阻擋錯誤，工具會照常執行。' },
+      { q: 'settings.json 的 permissions 規則，比對順序是？',
+        o: ['allow → ask → deny', 'deny → ask → allow', '越具體的規則越優先', '依檔案中的書寫順序'],
+        a: 1, e: 'deny 最先比對，一旦符合就阻擋；較具體的 allow 也無法在 deny 裡開例外。' },
+      { q: '下列哪個做法「不」建議？',
+        o: ['SSH 使用 ed25519 並設定 passphrase', 'gh auth setup-git 讓 git 透過 gh 取得憑證', 'git config --global credential.helper store', '使用有到期日的 fine-grained PAT'],
+        a: 2, e: 'credential.helper store 會把 Token 以明文存在 ~/.git-credentials。' },
+      { q: '/ship 的正確順序是？',
+        o: ['push → 建分支 → commit → PR', '測試 → 建分支 → commit → push → PR', 'commit → push main → 建分支', '建 PR → 測試 → commit'],
+        a: 1, e: '先確認測試通過，在 feature 分支 commit 後推送，再建立 PR 交由人工審查。' },
+      { q: 'gh pr merge --auto 要能運作，前提是什麼？',
+        o: ['安裝 GitHub CLI 即可', '儲存庫開啟 Allow auto-merge，且有尚未滿足的必要檢查或審查', '必須是 main 分支', 'PR 標題要以 feat: 開頭'],
+        a: 1, e: '自動合併是「條件滿足後再合併」，需在儲存庫設定開啟，並搭配分支保護的必要條件。AI 產生的 PR 仍建議人工審查。' },
+      { q: 'GitHub MCP 的 Token 應該怎麼提供？',
+        o: ['直接寫在 .mcp.json', '寫在 CLAUDE.md', '用環境變數，在 .mcp.json 以 ${GITHUB_PAT} 引用', '貼在對話裡'],
+        a: 2, e: '.mcp.json 會提交到 git，Token 寫進去就外洩。用環境變數並選擇權限最小的 fine-grained PAT。' }
+    ]
+  };
+
+  var KEY = 'cc4-course-quiz-v1';
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { state = {}; }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+
+  var LETTERS = ['A', 'B', 'C', 'D'];
+
+  // 固定的選項順序（依題目產生，重新整理後不變），避免正確答案集中在同一個位置
+  function order(id, qi, n) {
+    var h = 2166136261, key = id + ':' + qi, idx = [], i;
+    for (i = 0; i < key.length; i++) { h ^= key.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+    for (i = 0; i < n; i++) idx.push(i);
+    for (i = n - 1; i > 0; i--) { h = (Math.imul(h, 1103515245) + 12345) >>> 0; var j = h % (i + 1); var t = idx[i]; idx[i] = idx[j]; idx[j] = t; }
+    return idx;
+  }
+
+  function renderQuiz(box) {
+    var id = box.getAttribute('data-quiz');
+    var items = QUIZ[id];
+    box.innerHTML = '';
+    items.forEach(function (it, qi) {
+      var q = document.createElement('div');
+      q.className = 'q';
+      var t = document.createElement('div');
+      t.className = 'qt';
+      t.innerHTML = '<span class="qn">Q' + (qi + 1) + '</span><span></span>';
+      t.lastChild.textContent = it.q;
+      q.appendChild(t);
+      var opts = document.createElement('div');
+      opts.className = 'opts';
+      var ex = document.createElement('div');
+      ex.className = 'explain';
+      ex.hidden = true;
+      order(id, qi, it.o.length).forEach(function (oi, pos) {
+        var txt = it.o[oi];
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.id = 'q-' + id + '-' + qi + '-' + oi;
+        b.setAttribute('data-oi', oi);
+        b.innerHTML = '<span class="l">' + LETTERS[pos] + '</span><span></span>';
+        b.lastChild.textContent = txt;
+        b.addEventListener('click', function () { answer(id, qi, oi); paint(); });
+        opts.appendChild(b);
+      });
+      q.appendChild(opts);
+      q.appendChild(ex);
+      box.appendChild(q);
+    });
+    var sc = document.createElement('div');
+    sc.className = 'score';
+    sc.setAttribute('data-score', id);
+    box.appendChild(sc);
+  }
+
+  function answer(id, qi, oi) {
+    state[id] = state[id] || {};
+    if (state[id][qi] !== undefined) return;
+    state[id][qi] = oi;
+    save();
+  }
+
+  function stats(id) {
+    var s = state[id] || {}, done = 0, right = 0;
+    QUIZ[id].forEach(function (it, qi) {
+      if (s[qi] !== undefined) { done++; if (s[qi] === it.a) right++; }
+    });
+    return { done: done, right: right, total: QUIZ[id].length };
+  }
+
+  function paint() {
+    document.querySelectorAll('.quiz').forEach(function (box) {
+      var id = box.getAttribute('data-quiz');
+      var s = state[id] || {};
+      box.querySelectorAll('.q').forEach(function (qEl, qi) {
+        var it = QUIZ[id][qi];
+        var picked = s[qi];
+        var btns = qEl.querySelectorAll('.opts button');
+        var ex = qEl.querySelector('.explain');
+        var rightLetter = '';
+        btns.forEach(function (b, pos) {
+          var oi = +b.getAttribute('data-oi');
+          if (oi === it.a) rightLetter = LETTERS[pos];
+          b.classList.remove('right', 'wrong');
+          b.disabled = picked !== undefined;
+          if (picked !== undefined) {
+            if (oi === it.a) b.classList.add('right');
+            else if (oi === picked) b.classList.add('wrong');
+          }
+        });
+        if (picked !== undefined) {
+          var ok = picked === it.a;
+          ex.hidden = false;
+          ex.innerHTML = (ok ? '<b class="r">答對了。</b>' : '<b class="w">正確答案是 ' + rightLetter + '。</b>') + '<span></span>';
+          ex.lastChild.textContent = it.e;
+        } else {
+          ex.hidden = true;
+        }
+      });
+      var st = stats(id);
+      var sc = box.querySelector('[data-score="' + id + '"]');
+      sc.textContent = st.done ? ('本堂已作答 ' + st.done + ' / ' + st.total + '，答對 ' + st.right + ' 題') : ('共 ' + st.total + ' 題，點選選項即可看到解說');
+    });
+    var tDone = 0, tRight = 0, tAll = 0;
+    Object.keys(QUIZ).forEach(function (id) {
+      var st = stats(id);
+      tDone += st.done; tRight += st.right; tAll += st.total;
+      var p = document.querySelector('[data-prog="' + id + '"]');
+      if (p) {
+        p.textContent = '測驗答對 ' + st.right + ' / ' + st.total;
+        p.classList.toggle('done', st.right === st.total);
+      }
+    });
+    document.getElementById('total-score').textContent = tRight + ' / ' + tAll;
+    var sum = document.getElementById('sum-score');
+    sum.textContent = tDone
+      ? ('已作答 ' + tDone + ' / ' + tAll + ' 題，答對 ' + tRight + ' 題' + (tRight === tAll ? '，全部正確！' : '。答錯的題目可回到該堂複習解說。'))
+      : ('尚未作答。四堂共 ' + tAll + ' 題，建議讀完每堂後完成自我測驗。');
+  }
+
+  document.querySelectorAll('.quiz').forEach(renderQuiz);
+
+  document.getElementById('reset-quiz').addEventListener('click', function () {
+    state = {}; save(); paint();
+  });
+
+  /* ---------- tabs ---------- */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  var pages = Array.prototype.slice.call(document.querySelectorAll('section.page'));
+  function show(id, scroll) {
+    if (!document.getElementById(id)) id = 'home';
+    pages.forEach(function (p) { p.hidden = p.id !== id; });
+    tabs.forEach(function (t) {
+      var on = t.getAttribute('data-tab') === id;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      if (on) {
+        var ol = t.closest('ol');
+        var li = t.parentNode;
+        if (ol && ol.scrollWidth > ol.clientWidth) ol.scrollLeft = Math.max(0, li.offsetLeft - 16);
+      }
+    });
+    if (scroll) {
+      var top = document.querySelector('.layout').getBoundingClientRect().top + window.scrollY - 12;
+      window.scrollTo({ top: Math.max(0, top) });
+    }
+    try { history.replaceState(null, '', '#' + id); } catch (e) {}
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { show(t.getAttribute('data-tab'), true); });
+    t.addEventListener('keydown', function (ev) {
+      var d = ev.key === 'ArrowDown' || ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowUp' || ev.key === 'ArrowLeft' ? -1 : 0;
+      if (!d) return;
+      ev.preventDefault();
+      var n = tabs[(i + d + tabs.length) % tabs.length];
+      n.focus(); show(n.getAttribute('data-tab'), false);
+    });
+  });
+  document.querySelectorAll('[data-go]').forEach(function (b) {
+    b.addEventListener('click', function () { show(b.getAttribute('data-go'), true); });
+  });
+  show((location.hash || '').replace('#', '') || 'home', false);
+  window.addEventListener('hashchange', function () {
+    var id = (location.hash || '').replace('#', '');
+    if (id && document.getElementById(id) && document.getElementById(id).classList.contains('page')) show(id, true);
+  });
+
+  /* ---------- copy ---------- */
+  document.querySelectorAll('[data-copy]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var text = b.closest('.code').querySelector('pre').innerText;
+      var done = function (msg) { b.textContent = msg; setTimeout(function () { b.textContent = '複製'; }, 1600); };
+      try {
+        navigator.clipboard.writeText(text).then(function () { done('已複製'); }, function () { done('請手動選取'); });
+      } catch (e) { done('請手動選取'); }
+    });
+  });
+
+  paint();
+})();
+</script>
+
+</body>
+</html>
